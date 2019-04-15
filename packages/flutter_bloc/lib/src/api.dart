@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:masterloop_core_api/core_api.dart';
+import 'package:masterloop_core/core.dart' show Api;
 import 'package:masterloop_flutter_bloc/src/provider.dart';
 
 class ApiProvider<T extends Api> extends Provider<T> {

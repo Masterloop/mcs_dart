@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:masterloop_core_bloc/core_bloc.dart';
+import 'package:masterloop_core/core.dart' show BaseBloc;
 import 'package:masterloop_flutter_bloc/src/provider.dart';
 
 class BlocProvider<T extends BaseBloc<dynamic, dynamic>> extends Provider<T> {

@@ -1,4 +1,3 @@
-import 'package:masterloop_core_api/core_api.dart';
 import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:masterloop_api/src/devices.dart';
@@ -10,7 +9,8 @@ import 'package:masterloop_core/core.dart'
         LiveValue,
         ObservationValue,
         DeviceUnsubscribeCallback,
-        DeviceSubscribeCallback;
+        DeviceSubscribeCallback,
+        Api;
 
 class DeviceApi implements Api {
   final String basePath;

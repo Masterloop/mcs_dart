@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:masterloop_core_api/core_api.dart';
-import 'package:masterloop_core/core.dart' show Template, Device;
+import 'package:masterloop_core/core.dart' show Template, Device, Api;
 import 'dart:async';
 
 class TemplatesApi implements Api {

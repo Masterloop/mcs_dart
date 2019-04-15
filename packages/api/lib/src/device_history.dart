@@ -1,7 +1,6 @@
-import 'package:masterloop_core_api/core_api.dart';
 import 'package:dio/dio.dart';
 import 'package:masterloop_api/src/devices.dart';
-import 'package:masterloop_core/core.dart' show Value, CommandValue;
+import 'package:masterloop_core/core.dart' show Value, CommandValue, Api;
 import 'dart:async';
 
 class DeviceHistoryApi implements Api {

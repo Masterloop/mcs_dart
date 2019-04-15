@@ -1,8 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:masterloop_core_api/core_api.dart';
 import 'package:masterloop_api/src/utils/live_device.dart';
 import 'package:masterloop_api/src/device.dart';
-import 'package:masterloop_core/core.dart' show Device, LiveValue;
+import 'package:masterloop_core/core.dart' show Device, LiveValue, Api;
 import 'package:masterloop_api/src/utils/rabbit_mq_connection.dart';
 import 'dart:async';
 

@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:masterloop_core_api/core_api.dart';
 import 'package:masterloop_api/src/templates.dart';
 import 'package:masterloop_api/src/devices.dart';
+import 'package:masterloop_core/core.dart' show Api;
 import 'dart:async';
 
 class MasterloopApi implements Api {

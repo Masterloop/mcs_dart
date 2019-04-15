@@ -5,17 +5,13 @@ author: Shovel Maman
 homepage:
 
 environment:
-  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+  sdk: ">=2.0.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
   masterloop_api:
     path: ../api
-  masterloop_core_bloc:
-    path: ../core_bloc
-  masterloop_core_api:
-    path: ../core_api
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,5 @@
-import 'package:masterloop_core_bloc/core_bloc.dart';
-import 'package:masterloop_core/core.dart' show Command, ValueGetter;
+import 'package:masterloop_core/core.dart'
+    show Command, ValueGetter, StreamBloc, ListBloc;
 import 'dart:async';
 
 class CommandsBloc extends StreamBloc<Iterable<Command>> with ListBloc {
