@@ -1,4 +1,5 @@
-import 'package:masterloop_core/core.dart' show Device, ValueGetter, Bloc;
+import 'package:masterloop_core/masterloop_core.dart'
+    show Device, ValueGetter, Bloc;
 import 'dart:async';
 
 typedef Future<bool> SendCommand(

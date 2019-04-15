@@ -1,4 +1,4 @@
-import 'package:masterloop_core/core.dart'
+import 'package:masterloop_core/masterloop_core.dart'
     show Template, Bloc, ListBloc, ValueGetter;
 import 'dart:async';
 

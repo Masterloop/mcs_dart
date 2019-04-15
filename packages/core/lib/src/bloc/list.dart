@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:masterloop_core/core.dart' show ValueGetter, Test;
+import 'package:masterloop_core/src/deftypes.dart' show ValueGetter, Test;
 import 'package:masterloop_core/src/bloc/base.dart';
 
 mixin ListBloc<T, S> on BaseBloc<T, Iterable<S>> {

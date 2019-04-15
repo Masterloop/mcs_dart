@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:masterloop_api/src/utils/live_device.dart';
 import 'package:masterloop_api/src/device.dart';
-import 'package:masterloop_core/core.dart' show Device, LiveValue, Api;
+import 'package:masterloop_core/masterloop_core.dart'
+    show Device, LiveValue, Api;
 import 'package:masterloop_api/src/utils/rabbit_mq_connection.dart';
 import 'dart:async';
 
@@ -44,6 +45,7 @@ class DevicesApi implements Api {
     bool init = true,
   ]) {
     assert(mid != null);
+
     final liveDevice = LiveDevice(
       mid: mid,
       observations: observations,
@@ -51,18 +53,10 @@ class DevicesApi implements Api {
       init: init,
     );
 
-    if (liveDevice.isEmpty) {
-      _liveDevicesMap.remove(mid);
-    } else {
-      _liveDevicesMap[mid] = liveDevice;
-    }
+    _liveDevicesMap[mid] = liveDevice;
 
-    if (_liveDevicesMap.isEmpty) {
-      return Future.value(liveDevice.stream);
-    } else {
-      return _subscribe(devices: _liveDevicesMap.values.toList())
-          .then((_) => liveDevice.stream);
-    }
+    return _subscribe(devices: _liveDevicesMap.values.toList())
+        .then((_) => liveDevice.stream);
   }
 
   Future<void> _unsubscribeDevice(String mid) {
@@ -70,11 +64,12 @@ class DevicesApi implements Api {
 
     final liveDevice = _liveDevicesMap.remove(mid);
 
-    return _unsubscribe().then((_) => liveDevice?.dispose()).then(
-          (_) => _liveDevicesMap.isNotEmpty
-              ? _subscribe(devices: _liveDevicesMap.values.toList())
-              : Future.value(),
-        );
+    if (_liveDevicesMap.isNotEmpty) {
+      return _subscribe(devices: _liveDevicesMap.values.toList())
+          .then((_) => liveDevice?.dispose());
+    } else {
+      return Future.value();
+    }
   }
 
   Future<void> _unsubscribe() =>

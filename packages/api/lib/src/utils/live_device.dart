@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:stomp/stomp.dart';
-import 'package:masterloop_core/core.dart'
+import 'package:masterloop_core/masterloop_core.dart'
     show LiveValue, ObservationValue, CommandValue;
 
 class LiveDevice implements Matcher {

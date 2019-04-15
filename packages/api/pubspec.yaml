@@ -1,8 +1,8 @@
 name: masterloop_api
 description: Masterloop Api plugin
 version: 0.0.1
-author: Shovel Maman
-homepage:
+author: Shovel Maman <sma@masterloop.com>
+homepage: https://www.masterloop.com/
 
 environment:
   sdk: ">=2.0.0 <3.0.0"
