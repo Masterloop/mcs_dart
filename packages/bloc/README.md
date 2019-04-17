@@ -149,8 +149,8 @@ Future<void> refresh()
 
 ###### optional:
 
--arguments<br />
--expiresIn, defaults to 5 minutes
+- arguments<br />
+- expiresIn, defaults to 5 minutes
 
 ```
 Future<bool> sendCommand({
@@ -253,7 +253,7 @@ if tester is null no filtering is applied
 
 ###### optional:
 
--init, indicates if values should be initialized
+- init, indicates if values should be initialized
 
 ```
 Future<void> subscribe({List<int> ids, bool init = false})

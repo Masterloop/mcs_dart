@@ -63,4 +63,4 @@ final someBloc = Provider.of<T>(context);
 
 #### limitations
 
--you can't have 2 providers of some type in the same subtree
+- you can't have 2 providers of some type in the same subtree
