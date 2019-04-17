@@ -19,9 +19,9 @@ Unless explicitly stated otherwise all files in this repository are licensed und
 ### Implemeted types:
 
 - [TemplatesBloc](#templatesBloc)
-- [DevicesBloc](#devicesBloc) <br/>
-- [DeviceBloc](#devicebloc) <br/>
-- [CommandsBloc](#commandsbloc) <br/>
+- [DevicesBloc](#devicesBloc)
+- [DeviceBloc](#devicebloc)
+- [CommandsBloc](#commandsbloc)
 - [ObservationsBloc](#observationsbloc)
 
 ## API:
