@@ -53,28 +53,32 @@ extends Bloc<Iterable<Template>>
 
 ```
 TemplatesBloc({
-    //Called on templatesBloc.Refresh() and returns most updated list of templates
-    Future<Iterable<Template>> onRefresh,
-    //Comparator to use when sorting the templates
-    Comparator<Template> comparator,
-  })
+  //Called on templatesBloc.Refresh() and returns most updated list of templates
+  Future<Iterable<Template>> onRefresh,
+  //Comparator to use when sorting the templates
+  Comparator<Template> comparator,
+})
 ```
 
 #### Methods
 
-refreshing
+##### refreshing
 
 ```
 Future<void> refresh()
 ```
 
-sorting
+##### sorting
+
+if comparator is null no sorting is applied
 
 ```
 void sort(Comparator<Template> comparator)
 ```
 
-filtering
+##### filtering
+
+if tester is null no filtering is applied
 
 ```
   void filter(Test<Template> tester)
@@ -88,34 +92,139 @@ extends Bloc<Device>
 
 ```
 DeviceBloc({
-    //MID of device
-    String mid,
-    //Called on deviceBloc.Refresh() and returns most updated device
-    ValueGetter<Future<Device>> onRefresh,
-    //Implementation of send command
-    SendCommand onSendCommand,
-  })
+  //MID of device
+  String mid,
+  //Called on deviceBloc.Refresh() and returns most updated device
+  ValueGetter<Future<Device>> onRefresh,
+  //Implementation of send command
+  SendCommand onSendCommand,
+})
 ```
 
 #### Methods
 
-refreshing
+##### refreshing
 
 ```
 Future<void> refresh()
 ```
 
-sending commands
+##### sending commands
 
-##### optional:
+###### optional:
 
 -arguments<br />
 -expiresIn, defaults to 5 minutes
 
 ```
 Future<bool> sendCommand({
-    int id,
-    Iterable<Map<String, dynamic>> arguments,
-    Duration expiresIn = const Duration(minutes: 5),
-  })
+  int id,
+  Iterable<Map<String, dynamic>> arguments,
+  Duration expiresIn = const Duration(minutes: 5),
+})
+```
+
+### CommandsBloc
+
+extends Bloc<Command>
+
+```
+CommandsBloc({
+  //Called on commandsBloc.Refresh() and returns most updated commands, force update
+  Future<Iterable<Command>> onRefresh,
+  //Usually comming from deviceBloc.state.map((device)=> deivce.commands).distinct()
+  Stream<Iterable<Command>> commands,
+  //Comparator to use when sorting the commands
+  Comparator<Command> comparator,
+})
+```
+
+#### Methods
+
+##### refreshing
+
+```
+Future<void> refresh()
+```
+
+##### sorting
+
+if comparator is null no sorting is applied
+
+```
+void sort(Comparator<Command> comparator)
+```
+
+##### filtering
+
+if tester is null no filtering is applied
+
+```
+  void filter(Test<Command> tester)
+```
+
+### ObservationsBloc
+
+extends Bloc<ObservationState>
+
+```
+ObservationState({
+    Observation observation;
+    ObservationValue value;
+})
+```
+
+```
+ObservationsBloc({
+  //Usually comming from observationsBloc.state.map((device)=> deivce.observations).distinct()
+  Stream<Iterable<Observation>> observations,
+  //Called on observationsBloc.Refresh() and returns most updated observations values, force update
+  ValueGetter<Future<Iterable<ObservationValue>>> onRefresh,
+  //Implemetation of subscribe
+  SubscribeCallback<ObservationValue> subscribe,
+  //Implemetation of unsubscribe
+  UnsubscribeCallback unsubscribe,
+  //Comparator to use when sorting the observations
+  Comparator<ObservationState> comparator,
+})
+```
+
+#### Methods
+
+##### refreshing
+
+```
+Future<void> refresh()
+```
+
+##### sorting
+
+if comparator is null no sorting is applied
+
+```
+void sort(Comparator<ObservationState> comparator)
+```
+
+##### filtering
+
+if tester is null no filtering is applied
+
+```
+  void filter(Test<ObservationState> tester)
+```
+
+##### subscribing to observations
+
+###### optional:
+
+-init, indicates if values should be initialized
+
+```
+Future<void> subscribe({List<int> ids, bool init = false})
+```
+
+##### unsubscribing
+
+```
+Future<void> unsubscribe()
 ```
