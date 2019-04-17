@@ -61,6 +61,6 @@ later in code get the data from the subtree:
 final someBloc = Provider.of<T>(context);
 ```
 
-limitations:
+#### limitations
 
--you cant have 2 providers of some type in the same subtree
+-you can't have 2 providers of some type in the same subtree
