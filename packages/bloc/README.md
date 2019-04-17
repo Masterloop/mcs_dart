@@ -48,7 +48,7 @@ checking if bloc is disposed
 bool get isDisposed
 ```
 
-### [TemplatesBloc](../lib/src/models/templates.dart)
+### [TemplatesBloc](./lib/src/models/templates.dart)
 
 extends Bloc<Iterable<Template>>
 
