@@ -56,4 +56,4 @@ filtering
   void filter(Test<Template> tester)
 ```
 
-##### \*for DevicesApi use type Device
+##### \*for Devices Bloc use type DevicesBloc and Device types
