@@ -24,9 +24,7 @@ Unless explicitly stated otherwise all files in this repository are licensed und
 - [CommandsBloc](#commandsbloc)
 - [ObservationsBloc](#observationsbloc)
 
-## API:
-
-### Bloc
+## Bloc
 
 #### Properties
 
@@ -103,6 +101,8 @@ if tester is null no filtering is applied
 ```
   void filter(Test<T> tester)
 ```
+
+## Implemitations
 
 ### [TemplatesBloc](./lib/src/models/templates.dart)
 
