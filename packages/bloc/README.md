@@ -18,11 +18,11 @@ Unless explicitly stated otherwise all files in this repository are licensed und
 
 ### Implemeted types:
 
-- [TemplatesBloc](#templatesBloc,-tevicesBloc*)
-- [DevicesBloc](#templatesBloc,-tevicesBloc*) <br/>
+- [TemplatesBloc](#templatesBloc,-devicesBloc*)
+- [DevicesBloc](#templatesBloc,-devicesBloc*) <br/>
 - [DeviceBloc](#devicebloc) <br/>
-- CommandsBloc <br/>
-- ObservationsBloc
+- [CommandsBloc](#commandsbloc) <br/>
+- [ObservationsBloc](#observationsbloc)
 
 ## API:
 
