@@ -18,7 +18,7 @@ Unless explicitly stated otherwise all files in this repository are licensed und
 
 ### Implemeted types:
 
--TemplatesBloc <br/>
+-[TemplatesBloc](#templatesbloc) <br/>
 -DeviceBloc <br/>
 -DevicesBloc <br/>
 -CommandsBloc <br/>
