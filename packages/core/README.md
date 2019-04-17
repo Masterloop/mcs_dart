@@ -24,6 +24,7 @@ Unless explicitly stated otherwise all files in this repository are licensed und
 - [Command](#command)
 - [Argument](#argument)
 - [DataType](#datatype)
+- [Value](#value)
 
 ### [Template](./lib/src/models/template.dart)
 
@@ -119,4 +120,58 @@ Argument({
 
 ```
 unknown, binary, boolean, double, integer, position, string
+```
+
+### [Value](./lib/src/models/value.dart)
+
+###### optional:
+
+- value
+- timestamp
+
+```
+Value<T>({
+    T value,
+    DateTime timestamp,
+})
+```
+
+#### ObservationValue
+
+ObservationValue extends Value implements LiveValue
+
+###### optional:
+
+- value
+- timestamp
+
+```
+ObservationValue({
+    int id,
+    dynamic value,
+    DateTime timestamp,
+})
+```
+
+#### ObservationValue
+
+CommandValue extends Value implements LiveValue
+
+###### optional:
+
+- deliveredAt
+- timestamp
+- expiresAt
+- wasAccepted
+- arguments
+
+```
+CommandValue({
+    int id,
+    DateTIme deliveredAt,
+    DateTIme timestamp,
+    DateTime expiresAt,
+    bool wasAccepted,
+    Map<int, dynamic> arguments,
+})
 ```
