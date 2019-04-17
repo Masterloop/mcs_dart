@@ -1,5 +1,7 @@
 import 'package:masterloop_core/masterloop_core.dart'
-    show Template, Bloc, ListBloc, ValueGetter;
+    show Template, ValueGetter;
+import 'package:masterloop_bloc/src/bloc/bloc.dart';
+import 'package:masterloop_bloc/src/bloc/list.dart';
 import 'dart:async';
 
 class TemplatesBloc extends Bloc<Iterable<Template>>

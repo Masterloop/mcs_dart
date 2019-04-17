@@ -4,9 +4,9 @@ import 'package:masterloop_core/masterloop_core.dart'
         ObservationValue,
         SubscribeCallback,
         UnsubscribeCallback,
-        ValueGetter,
-        TransformedBloc,
-        ListBloc;
+        ValueGetter;
+import 'package:masterloop_bloc/src/bloc/list.dart';
+import 'package:masterloop_bloc/src/bloc/transformed.dart';
 import 'dart:async';
 import 'package:rxdart/rxdart.dart';
 

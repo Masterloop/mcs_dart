@@ -1,5 +1,6 @@
-import 'package:masterloop_core/masterloop_core.dart'
-    show Device, Bloc, ListBloc, ValueGetter;
+import 'package:masterloop_core/masterloop_core.dart' show Device, ValueGetter;
+import 'package:masterloop_bloc/src/bloc/bloc.dart';
+import 'package:masterloop_bloc/src/bloc/list.dart';
 import 'dart:async';
 
 class DevicesBloc extends Bloc<Iterable<Device>>
