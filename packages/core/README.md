@@ -24,7 +24,7 @@ Unless explicitly stated otherwise all files in this repository are licensed und
 - [Command](#command)
 - [Argument](#argument)
 
-### Template
+### [Template](./lib/src/models/template.dart)
 
 ###### optional:
 
@@ -43,7 +43,7 @@ Template({
   })
 ```
 
-### Device
+### [Device](./lib/src/models/device.dart)
 
 ###### optional:
 
