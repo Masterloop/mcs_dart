@@ -76,7 +76,7 @@ class CommandValue implements LiveValue {
   final DateTime timestamp;
   final DateTime expiresAt;
   final bool wasAccepted;
-  final Iterable<ArgumentValue> arguments;
+  final Map<int, dynamic> arguments;
 
   CommandValue({
     this.id,
@@ -96,9 +96,11 @@ class CommandValue implements LiveValue {
       timestamp: toDateTime(json["Timestamp"]),
       expiresAt: toDateTime(json["ExpiresAt"]),
       wasAccepted: json["WasAccepted"],
-      arguments: List.unmodifiable(
-        json["Arguments"]?.map(
-          (v) => ArgumentValue.fromJson(v),
+      arguments: Map.unmodifiable(
+        Map.fromEntries(
+          (json["Arguments"] as List)?.map(
+            (a) => MapEntry<int, dynamic>(a["Id"], a["Value"]),
+          ),
         ),
       ),
     );
