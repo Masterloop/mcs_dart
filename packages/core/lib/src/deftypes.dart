@@ -1,4 +1,4 @@
-import 'package:masterloop_core/src/modals/value.dart' show LiveValue;
+import 'package:masterloop_core/src/models/value.dart' show LiveValue;
 import 'dart:async';
 
 //Used as a getter of type T value

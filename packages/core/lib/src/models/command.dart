@@ -1,4 +1,4 @@
-import 'package:masterloop_core/src/modals/argument.dart';
+import 'package:masterloop_core/src/models/argument.dart';
 
 class Command {
   final int id;

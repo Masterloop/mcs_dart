@@ -1,4 +1,4 @@
-import 'package:masterloop_core/src/modals/data_type.dart';
+import 'package:masterloop_core/src/models/data_type.dart';
 
 class Argument {
   final int id;

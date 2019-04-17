@@ -1,5 +1,5 @@
-import 'package:masterloop_core/src/modals/observation.dart';
-import 'package:masterloop_core/src/modals/command.dart';
+import 'package:masterloop_core/src/models/observation.dart';
+import 'package:masterloop_core/src/models/command.dart';
 
 class Template {
   final String tid;

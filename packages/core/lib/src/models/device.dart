@@ -1,4 +1,4 @@
-import 'package:masterloop_core/src/modals/template.dart';
+import 'package:masterloop_core/src/models/template.dart';
 import 'package:masterloop_core/src/utils.dart' show toDateTime;
 
 class Device {
