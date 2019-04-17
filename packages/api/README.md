@@ -20,7 +20,7 @@ Unless explicitly stated otherwise all files in this repository are licensed und
 
 - [MasterloopApi](#masterloopapi)
 
-### MasterloopApi
+### [MasterloopApi](./lib/src/masterloop.dart)
 
 ###### optional:
 
@@ -36,16 +36,16 @@ MasterloopApi({
 
 #### Properties
 
-##### devices
-
-```
-DevicesApi get devices
-```
-
 ##### templates
 
 ```
 DevicesApi get templates
+```
+
+##### devices
+
+```
+DevicesApi get devices
 ```
 
 #### Methods
@@ -63,4 +63,70 @@ Future<void> connect({
 
 ```
 Future<void> disconnect()
+```
+
+### [TemplatesApi](./lib/src/templates.dart)
+
+client must be authenticated, with access token.
+
+```
+TemplatesApi({
+    Dio client,
+})
+```
+
+#### Operators
+
+##### get [tid]
+
+```
+Future<Template> operator [](String tid)
+```
+
+#### Methods
+
+##### devices
+
+returns all devices of tid
+
+```
+Future<Iterable<Device>> devices({
+    String tid,
+})
+```
+
+### [DevicesApi](./lib/src/devices.dart)
+
+client must be authenticated, with access token.
+
+```
+DevicesApi({
+    Dio client,
+})
+```
+
+#### Operators
+
+##### get [mid]
+
+```
+DeviceApi operator [](String mid)
+```
+
+#### Methods
+
+##### get all devices
+
+returns all devices
+
+###### optional:
+
+- metadata, defualt false
+- details, default false
+
+```
+Future<Iterable<Device>> all({
+    bool metadata = false,
+    bool details = false,
+})
 ```

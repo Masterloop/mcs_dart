@@ -24,11 +24,11 @@ class MasterloopApi implements Api {
       .then((response) => true)
       .catchError((_) => false);
 
-  DevicesApi _devices;
-  DevicesApi get devices => _devices ??= DevicesApi(client: _client);
-
   TemplatesApi _templates;
   TemplatesApi get templates => _templates ??= TemplatesApi(client: _client);
+
+  DevicesApi _devices;
+  DevicesApi get devices => _devices ??= DevicesApi(client: _client);
 
   MasterloopApi({
     Dio client,
