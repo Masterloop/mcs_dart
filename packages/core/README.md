@@ -153,7 +153,7 @@ ObservationValue({
 })
 ```
 
-#### ObservationValue
+#### CommandValue
 
 CommandValue extends Value implements LiveValue
 
