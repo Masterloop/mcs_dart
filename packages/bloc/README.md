@@ -28,19 +28,19 @@ Unless explicitly stated otherwise all files in this repository are licensed und
 
 #### Properties
 
-stream of T
+##### stream of T
 
 ```
 Stream<T> get state
 ```
 
-current T
+##### current T
 
 ```
 T get current
 ```
 
-checking if bloc is disposed
+##### checking if bloc is disposed
 
 ```
 bool get isDisposed
