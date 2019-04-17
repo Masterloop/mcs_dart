@@ -85,7 +85,7 @@ if tester is null no filtering is applied
   void filter(Test<Template> tester)
 ```
 
-### DevicesBloc
+### [DevicesBloc](./lib/src/models/devices.dart)
 
 extends Bloc<Iterable<Device>>
 
@@ -122,7 +122,7 @@ if tester is null no filtering is applied
   void filter(Test<Device> tester)
 ```
 
-### DeviceBloc
+### [DeviceBloc](./lib/src/models/device.dart)
 
 extends Bloc<Device>
 
@@ -160,7 +160,7 @@ Future<bool> sendCommand({
 })
 ```
 
-### CommandsBloc
+### [CommandsBloc](<(./lib/src/models/commands.dart)>)
 
 extends Bloc<Command>
 
@@ -199,7 +199,7 @@ if tester is null no filtering is applied
   void filter(Test<Command> tester)
 ```
 
-### ObservationsBloc
+### [ObservationsBloc](./lib/src/models/observations.dart)
 
 extends Bloc<ObservationState>
 
