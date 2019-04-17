@@ -39,7 +39,7 @@ Stream<T> get state
 current T
 
 ```
-Iterable<T> get current
+T get current
 ```
 
 checking if bloc is disposed
@@ -48,9 +48,65 @@ checking if bloc is disposed
 bool get isDisposed
 ```
 
+#### Methods
+
+##### transforming stream
+
+```
+Stream<T> transform(Stream<S> stream)
+```
+
+##### dispatching updates
+
+```
+void dispatch(S state)
+```
+
+##### dispatching errors
+
+```
+void dispatchError(Object error, {StackTrace stackTrace})
+```
+
+##### dispose
+
+```
+void dispose()
+```
+
+## Mixins
+
+### ListBloc
+
+#### Methods
+
+##### refreshing
+
+calling onRefresh and dispatching the result
+
+```
+Future<void> refresh()
+```
+
+##### sorting
+
+if comparator is null no sorting is applied
+
+```
+void sort(Comparator<T> comparator)
+```
+
+##### filtering
+
+if tester is null no filtering is applied
+
+```
+  void filter(Test<T> tester)
+```
+
 ### [TemplatesBloc](./lib/src/models/templates.dart)
 
-extends Bloc<Iterable<Template>>
+extends Bloc<Iterable<Template>> with ListBloc
 
 ```
 TemplatesBloc({
