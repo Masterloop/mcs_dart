@@ -4,7 +4,7 @@
 
 ### Prerequisites
 
--Flutter SDK
+- [Flutter SDK](https://flutter.dev/)
 
 ## Feedback
 
