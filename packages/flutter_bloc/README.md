@@ -1,4 +1,4 @@
-# Masterloop FLutter Bloc
+# Masterloop Flutter Bloc
 
 ## How to build
 
@@ -16,7 +16,7 @@ Unless explicitly stated otherwise all files in this repository are licensed und
 
 ## Using the Masterloop Flutter Bloc
 
--Bloc Type
+### Bloc
 
 ```
 BlocProvider(
@@ -31,7 +31,7 @@ later in code get the bloc from the subtree:
 final someBloc = BlocProvider.of<SomeBlocType>(context);
 ```
 
--Api Type
+### Api
 
 ```
 ApiProvider(
@@ -46,7 +46,7 @@ later in code get the api from the subtree:
 final someApi = ApiProvider.of<SomeApiType>(context);
 ```
 
--Generic Type
+### Generic
 
 ```
 Provider<T>(
