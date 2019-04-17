@@ -25,7 +25,31 @@ Implemeted types:
 
 ## API:
 
+### Bloc
+
+#### Properties
+
+stream of T
+
+```
+Stream<T> get state
+```
+
+current T
+
+```
+Iterable<T> get current
+```
+
+checking if bloc is disposed
+
+```
+bool get isDisposed
+```
+
 ### TemplatesBloc, DevicesBloc\*
+
+extends Bloc<Iterable<Template>>
 
 ```
 TemplatesBloc({
@@ -57,3 +81,40 @@ filtering
 ```
 
 ##### \*for Devices Bloc use type DevicesBloc and Device types
+
+### DeviceBloc
+
+extends Bloc<Device>
+
+```
+DeviceBloc({
+    //MID of device
+    String mid,
+    //Called on deviceBloc.Refresh() and returns most updated device
+    ValueGetter<Future<Device>> onRefresh,
+    //Implementation of send command
+    SendCommand onSendCommand,
+  })
+```
+
+#### Methods
+
+refreshing
+
+```
+Future<void> refresh()
+```
+
+sending commands
+
+optional:
+-arguments
+-expiresIn, defaults to 5 minutes
+
+```
+Future<bool> sendCommand({
+    int id,
+    Iterable<Map<String, dynamic>> arguments,
+    Duration expiresIn = const Duration(minutes: 5),
+  })
+```

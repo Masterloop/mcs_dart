@@ -15,21 +15,24 @@ class DeviceBloc extends Bloc<Device> {
 
   DeviceBloc({
     this.mid,
-    ValueGetter<Future<Device>> getDevice,
-    SendCommand sendCommand,
+    ValueGetter<Future<Device>> onRefresh,
+    SendCommand onSendCommand,
   })  : assert(mid != null),
-        assert(getDevice != null),
+        assert(onRefresh != null),
         assert(sendCommand != null),
-        _getDevice = getDevice,
-        _sendCommand = sendCommand,
+        _getDevice = onRefresh,
+        _sendCommand = onSendCommand,
         super();
 
   Future<bool> sendCommand({
     int id,
     Iterable<Map<String, dynamic>> arguments,
     Duration expiresIn = const Duration(minutes: 5),
-  }) =>
-      _sendCommand(id, arguments, expiresIn);
+  }) {
+    assert(id != null);
+
+    return _sendCommand(id, arguments, expiresIn);
+  }
 
   Future<void> refresh() => _getDevice().then((d) {
         dispatch(d);
