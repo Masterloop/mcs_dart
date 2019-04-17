@@ -117,33 +117,9 @@ TemplatesBloc({
 })
 ```
 
-#### Methods
-
-##### refreshing
-
-```
-Future<void> refresh()
-```
-
-##### sorting
-
-if comparator is null no sorting is applied
-
-```
-void sort(Comparator<Template> comparator)
-```
-
-##### filtering
-
-if tester is null no filtering is applied
-
-```
-  void filter(Test<Template> tester)
-```
-
 ### [DevicesBloc](./lib/src/models/devices.dart)
 
-extends Bloc<Iterable<Device>>
+extends Bloc<Iterable<Device>> with ListBloc
 
 ```
 TemplatesBloc({
@@ -152,30 +128,6 @@ TemplatesBloc({
   //Comparator to use when sorting the devices
   Comparator<Device> comparator,
 })
-```
-
-#### Methods
-
-##### refreshing
-
-```
-Future<void> refresh()
-```
-
-##### sorting
-
-if comparator is null no sorting is applied
-
-```
-void sort(Comparator<Device> comparator)
-```
-
-##### filtering
-
-if tester is null no filtering is applied
-
-```
-  void filter(Test<Device> tester)
 ```
 
 ### [DeviceBloc](./lib/src/models/device.dart)
@@ -218,7 +170,7 @@ Future<bool> sendCommand({
 
 ### [CommandsBloc](<(./lib/src/models/commands.dart)>)
 
-extends Bloc<Command>
+extends Bloc<Command> with ListBloc
 
 ```
 CommandsBloc({
@@ -231,33 +183,9 @@ CommandsBloc({
 })
 ```
 
-#### Methods
-
-##### refreshing
-
-```
-Future<void> refresh()
-```
-
-##### sorting
-
-if comparator is null no sorting is applied
-
-```
-void sort(Comparator<Command> comparator)
-```
-
-##### filtering
-
-if tester is null no filtering is applied
-
-```
-  void filter(Test<Command> tester)
-```
-
 ### [ObservationsBloc](./lib/src/models/observations.dart)
 
-extends Bloc<ObservationState>
+extends Bloc<ObservationState> with ListBloc
 
 ```
 ObservationState({
@@ -282,28 +210,6 @@ ObservationsBloc({
 ```
 
 #### Methods
-
-##### refreshing
-
-```
-Future<void> refresh()
-```
-
-##### sorting
-
-if comparator is null no sorting is applied
-
-```
-void sort(Comparator<ObservationState> comparator)
-```
-
-##### filtering
-
-if tester is null no filtering is applied
-
-```
-  void filter(Test<ObservationState> tester)
-```
 
 ##### subscribing to observations
 
