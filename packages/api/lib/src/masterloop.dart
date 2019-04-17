@@ -30,8 +30,10 @@ class MasterloopApi implements Api {
   TemplatesApi _templates;
   TemplatesApi get templates => _templates ??= TemplatesApi(client: _client);
 
-  MasterloopApi({Dio client, this.host})
-      : _client = client ??
+  MasterloopApi({
+    Dio client,
+    this.host,
+  })  : _client = client ??
             Dio(
               BaseOptions(
                 baseUrl: host ?? hostUrl,
