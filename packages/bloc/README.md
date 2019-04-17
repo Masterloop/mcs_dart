@@ -16,11 +16,12 @@ Unless explicitly stated otherwise all files in this repository are licensed und
 
 ## Using the Masterloop Bloc
 
-Implemeted types:
--TemplatesBloc
--DeviceBloc
--DevicesBloc
--CommandsBloc
+### Implemeted types:
+
+-TemplatesBloc <br/>
+-DeviceBloc <br/>
+-DevicesBloc <br/>
+-CommandsBloc <br/>
 -ObservationsBloc
 
 ## API:
