@@ -16,7 +16,7 @@ Unless explicitly stated otherwise all files in this repository are licensed und
 
 ## Using the Masterloop Flutter Bloc
 
-### Bloc
+### BlocProvider
 
 ```
 BlocProvider(
@@ -31,7 +31,7 @@ later in code get the bloc from the subtree:
 final someBloc = BlocProvider.of<SomeBlocType>(context);
 ```
 
-### Api
+### ApiProvider
 
 ```
 ApiProvider(
@@ -46,7 +46,7 @@ later in code get the api from the subtree:
 final someApi = ApiProvider.of<SomeApiType>(context);
 ```
 
-### Generic
+### Provider
 
 ```
 Provider<T>(
