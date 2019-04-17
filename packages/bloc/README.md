@@ -18,8 +18,8 @@ Unless explicitly stated otherwise all files in this repository are licensed und
 
 ### Implemeted types:
 
-- [TemplatesBloc](#templatesBloc,-devicesBloc*)
-- [DevicesBloc](#templatesBloc,-devicesBloc*) <br/>
+- [TemplatesBloc](#templatesBloc)
+- [DevicesBloc](#devicesBloc) <br/>
 - [DeviceBloc](#devicebloc) <br/>
 - [CommandsBloc](#commandsbloc) <br/>
 - [ObservationsBloc](#observationsbloc)
@@ -48,7 +48,7 @@ checking if bloc is disposed
 bool get isDisposed
 ```
 
-### TemplatesBloc, DevicesBloc\*
+### TemplatesBloc
 
 extends Bloc<Iterable<Template>>
 
@@ -85,7 +85,42 @@ if tester is null no filtering is applied
   void filter(Test<Template> tester)
 ```
 
-##### \*for Devices Bloc use type DevicesBloc and Device types
+### DevicesBloc
+
+extends Bloc<Iterable<Device>>
+
+```
+TemplatesBloc({
+  //Called on devicesBloc.Refresh() and returns most updated list of devices
+  Future<Iterable<Device>> onRefresh,
+  //Comparator to use when sorting the devices
+  Comparator<Device> comparator,
+})
+```
+
+#### Methods
+
+##### refreshing
+
+```
+Future<void> refresh()
+```
+
+##### sorting
+
+if comparator is null no sorting is applied
+
+```
+void sort(Comparator<Device> comparator)
+```
+
+##### filtering
+
+if tester is null no filtering is applied
+
+```
+  void filter(Test<Device> tester)
+```
 
 ### DeviceBloc
 
