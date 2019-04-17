@@ -107,7 +107,8 @@ Future<void> refresh()
 
 sending commands
 
-optional:<br />
+##### optional:
+
 -arguments<br />
 -expiresIn, defaults to 5 minutes
 
