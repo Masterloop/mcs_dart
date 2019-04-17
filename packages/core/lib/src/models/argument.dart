@@ -5,8 +5,11 @@ class Argument {
   final String name;
   final DataType dataType;
 
-  Argument({this.id, this.name, this.dataType})
-      : assert(id != null),
+  Argument({
+    this.id,
+    this.name,
+    this.dataType,
+  })  : assert(id != null),
         assert(name != null),
         assert(dataType != null);
 

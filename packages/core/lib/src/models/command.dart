@@ -6,8 +6,12 @@ class Command {
   final String description;
   final Iterable<Argument> arguments;
 
-  Command({this.id, this.name, this.description, this.arguments})
-      : assert(id != null),
+  Command({
+    this.id,
+    this.name,
+    this.description,
+    this.arguments,
+  })  : assert(id != null),
         assert(name != null);
 
   factory Command.fromJson(Map<String, dynamic> json) {
