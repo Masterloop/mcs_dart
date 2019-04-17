@@ -7,6 +7,7 @@ class TemplatesBloc extends Bloc<Iterable<Template>>
   @override
   final ValueGetter<Future<Iterable<Template>>> onRefresh;
 
+  //onRefresh returns as updated list of templates
   TemplatesBloc({
     this.onRefresh,
     Comparator<Template> comparator,
