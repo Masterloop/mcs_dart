@@ -21,6 +21,13 @@ class DeviceHistoryApi implements Api {
     DateTime from,
     DateTime to,
   }) {
+    if (from == null) {
+      from = DateTime.now();
+    }
+    if (to == null) {
+      to = from.add(const Duration(days: 90));
+    }
+
     _validateDuration(from, to);
 
     return _client
@@ -38,6 +45,15 @@ class DeviceHistoryApi implements Api {
     DateTime from,
     DateTime to,
   }) {
+    assert(id != null);
+
+    if (from == null) {
+      from = DateTime.now();
+    }
+    if (to == null) {
+      to = from.add(const Duration(days: 90));
+    }
+
     _validateDuration(from, to);
 
     return _client

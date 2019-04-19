@@ -19,6 +19,10 @@ Unless explicitly stated otherwise all files in this repository are licensed und
 ### Contens:
 
 - [MasterloopApi](#masterloopapi)
+- [TemplatesApi](#templatesapi)
+- [DevicesApi](#devicesapi)
+- [DeviceApi](#deviceapi)
+- [DeviceHistoryApi](#devicehistoryapi)
 
 ### [MasterloopApi](./lib/src/masterloop.dart)
 
@@ -107,7 +111,7 @@ DevicesApi({
 
 #### Operators
 
-##### get [mid]
+##### get device api
 
 ```
 DeviceApi operator [](String mid)
@@ -128,5 +132,139 @@ returns all devices
 Future<Iterable<Device>> all({
     bool metadata = false,
     bool details = false,
+})
+```
+
+### [DeviceApi](./lib/src/device.dart)
+
+client must be authenticated, with access token.
+
+```
+DeviceApi({
+    Dio client,
+})
+```
+
+#### Parameters
+
+##### get device details
+
+```
+Future<Device> get details
+```
+
+##### get device with secure details
+
+```
+Future<Device> get secureDetails
+```
+
+##### get device's template
+
+```
+Future<Template> get template
+```
+
+##### get device's current observation's values
+
+```
+Future<Iterable<ObservationValue>> get current
+```
+
+##### get device history api
+
+```
+DeviceHistoryApi get history
+```
+
+#### Methods
+
+##### send command to device
+
+###### optional:
+
+- arguments
+- expiresIn, defualt 5 minutes
+
+```
+Future<bool> sendCommand({
+    int id,
+    Iterable<Map<String, dynamic>> arguments,
+    Duration expiresIn = const Duration(minutes: 5),
+})
+```
+
+##### subscribe to observations/commands
+
+###### optional:
+
+- observations, default all. if passed null all observations will be included, for none pass empty array
+- commands, default none. if passed null all commands will be included, for none pass empty array
+- init, defualt true
+
+```
+Future<Stream<LiveValue>> subscribe({
+    Iterable<int> observations,
+    Iterable<int> commands = const [],
+    bool init = true,
+})
+```
+
+##### unsubscribe from all observations/commands
+
+```
+Future<void> unsubscribe()
+```
+
+### [DeviceHistoryApi](./lib/src/device_history.dart)
+
+client must be authenticated, with access token.
+
+```
+DeviceHistoryApi({
+    Dio client,
+})
+```
+
+#### Operators
+
+##### get device api
+
+```
+DeviceApi operator [](String mid)
+```
+
+#### Methods
+
+##### get commands history
+
+difference cant be grater than 90 days
+
+###### optional:
+
+- from, defualt DateTime.now()
+- to, default from + 90 days
+
+```
+Future<Iterable<CommandValue>> commands({
+    DateTime from,
+    DateTime to,
+})
+```
+
+##### get observation history
+
+difference cant be grater than 90 days
+
+###### optional:
+
+- from, defualt DateTime.now()
+- to, default from + 90 days
+
+```
+Future<Iterable<Value>> observation({
+    int id,
+    DateTime from,
+    DateTime to,
 })
 ```
