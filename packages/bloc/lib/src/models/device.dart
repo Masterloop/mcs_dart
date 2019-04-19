@@ -19,7 +19,7 @@ class DeviceBloc extends Bloc<Device> {
     SendCommand onSendCommand,
   })  : assert(mid != null),
         assert(onRefresh != null),
-        assert(sendCommand != null),
+        assert(onSendCommand != null),
         _getDevice = onRefresh,
         _sendCommand = onSendCommand,
         super();
