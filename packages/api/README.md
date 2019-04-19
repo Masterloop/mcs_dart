@@ -40,6 +40,12 @@ MasterloopApi({
 
 #### Properties
 
+##### get/set token
+
+```
+String token
+```
+
 ##### templates
 
 ```
