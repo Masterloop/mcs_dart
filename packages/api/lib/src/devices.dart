@@ -35,8 +35,7 @@ class DevicesApi implements Api {
                     (d) => Device.fromJson(d),
                   ),
                 ),
-          )
-          .catchError((_) => null);
+          );
 
   Future<Stream<LiveValue>> _subscribeDevice(
     String mid,
