@@ -67,7 +67,7 @@ class DeviceApi implements Api {
   Future<bool> sendCommand({
     int id,
     Iterable<Map<String, dynamic>> arguments,
-    Duration expiresIn = const Duration(minutes: 5),
+    Duration expiresIn,
   }) =>
       _client
           .post(
@@ -76,8 +76,10 @@ class DeviceApi implements Api {
               "Id": id,
               "Arguments": arguments,
               "Timestamp": DateTime.now().toUtc().toIso8601String(),
-              "ExpiresAt":
-                  DateTime.now().add(expiresIn).toUtc().toIso8601String(),
+              "ExpiresAt": DateTime.now()
+                  .add(expiresIn ?? const Duration(minutes: 5))
+                  .toUtc()
+                  .toIso8601String(),
             },
           )
           .then((_) => true)
