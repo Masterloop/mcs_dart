@@ -3,19 +3,21 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:masterloop_bloc/src/state.dart';
 import 'package:masterloop_core/masterloop_core.dart' show Predicate;
 
-mixin ListBloc<E extends ListEvent, S> on Bloc<E, Iterable<S>> {
+mixin ListBloc<E extends ListEvent, S> on Bloc<E, BlocState<Iterable<S>>> {
   Comparator<S> _comparator;
   Predicate<S> _tester;
 
   @override
-  Stream<Iterable<S>> transform(
+  Stream<BlocState<Iterable<S>>> transform(
     Stream events,
-    Stream<Iterable<S>> Function(E) next,
+    Stream<BlocState<Iterable<S>>> Function(E) next,
   ) =>
-      super.transform(events, next).distinct().map((items) {
-        if (items == null || items.isEmpty) return items;
+      super.transform(events, next).distinct().map((state) {
+        if (state == null || !state.hasData || state.data.isEmpty) return state;
+        final items = state.data;
 
         List<S> mappedItems = items.toList();
         if (_tester != null) {
@@ -25,20 +27,22 @@ mixin ListBloc<E extends ListEvent, S> on Bloc<E, Iterable<S>> {
           mappedItems.sort(_comparator);
         }
 
-        return mappedItems;
+        return BlocState(
+          data: mappedItems,
+        );
       }).distinct();
 
   @override
-  Stream<Iterable<S>> mapEventToState(event) async* {
+  Stream<BlocState<Iterable<S>>> mapEventToState(event) async* {
     switch (event.runtimeType) {
       case SortListEvent:
         _comparator = (event as SortListEvent<S>).comparator;
-        yield List.from(currentState);
+        yield BlocState(data: List.from(currentState.data));
         break;
 
       case FilterListEvent:
         _tester = (event as FilterListEvent<S>).tester;
-        yield List.from(currentState);
+        yield BlocState(data: List.from(currentState.data));
         break;
     }
   }

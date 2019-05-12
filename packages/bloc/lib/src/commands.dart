@@ -3,9 +3,10 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:masterloop_api/masterloop_api.dart' show DeviceApi;
 import 'package:masterloop_bloc/src/bloc_list.dart';
+import 'package:masterloop_bloc/src/state.dart';
 import 'package:masterloop_core/masterloop_core.dart' show Command, Predicate;
 
-class CommandsBloc extends Bloc<CommandsEvent, Iterable<Command>>
+class CommandsBloc extends Bloc<CommandsEvent, BlocState<Iterable<Command>>>
     with ListBloc {
   final DeviceApi _api;
 
@@ -15,18 +16,35 @@ class CommandsBloc extends Bloc<CommandsEvent, Iterable<Command>>
         _api = api;
 
   @override
-  Iterable<Command> get initialState => null;
+  BlocState<Iterable<Command>> get initialState => BlocState();
 
   @override
-  Stream<Iterable<Command>> mapEventToState(CommandsEvent event) async* {
+  Stream<BlocState<Iterable<Command>>> mapEventToState(
+      CommandsEvent event) async* {
     switch (event.runtimeType) {
       case RefreshCommandsEvent:
         final completer = (event as RefreshCommandsEvent).completer;
 
-        yield await _api.template
-            .then((template) => template.commands)
-            .whenComplete(completer.complete)
-            .catchError(completer.completeError);
+        yield BlocState(
+          data: await _api.template
+              .then((template) => template.commands)
+              .whenComplete(completer.complete)
+              .catchError(completer.completeError),
+        );
+        break;
+
+      case SendCommandEvent:
+        final sendCommandEvent = event as SendCommandEvent;
+        final completer = sendCommandEvent.completer;
+
+        _api
+            .sendCommand(
+              id: sendCommandEvent.id,
+              arguments: sendCommandEvent.arguments,
+              expiresIn: sendCommandEvent.expiresIn,
+            )
+            .then((_) => completer.complete(true))
+            .catchError((_) => completer.complete(false));
         break;
 
       case FilterCommandsEvent:
@@ -41,6 +59,20 @@ abstract class CommandsEvent implements ListEvent {}
 
 class RefreshCommandsEvent implements CommandsEvent {
   final Completer completer = Completer();
+}
+
+class SendCommandEvent implements CommandsEvent {
+  final Completer<bool> completer = Completer();
+
+  final int id;
+  final Iterable<Map<String, dynamic>> arguments;
+  final Duration expiresIn;
+
+  SendCommandEvent({
+    this.id,
+    this.arguments,
+    this.expiresIn,
+  }) : assert(id != null);
 }
 
 class FilterCommandsEvent extends FilterListEvent<Command>

@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:masterloop_api/masterloop_api.dart' show DevicesApi;
 import 'package:masterloop_bloc/src/bloc_list.dart';
+import 'package:masterloop_bloc/src/state.dart';
 import 'package:masterloop_core/masterloop_core.dart' show Device, Predicate;
 
-class DevicesBloc extends Bloc<DevicesEvent, Iterable<Device>> with ListBloc {
+class DevicesBloc extends Bloc<DevicesEvent, BlocState<Iterable<Device>>>
+    with ListBloc {
   final DevicesApi _api;
 
   DevicesBloc({
@@ -14,19 +16,21 @@ class DevicesBloc extends Bloc<DevicesEvent, Iterable<Device>> with ListBloc {
         _api = api;
 
   @override
-  Iterable<Device> get initialState => null;
+  BlocState<Iterable<Device>> get initialState => BlocState();
 
   @override
-  Stream<Iterable<Device>> mapEventToState(DevicesEvent event) async* {
-    print("DevicesEvent $event");
+  Stream<BlocState<Iterable<Device>>> mapEventToState(
+      DevicesEvent event) async* {
     switch (event.runtimeType) {
       case RefreshDevicesEvent:
         final completer = (event as RefreshDevicesEvent).completer;
 
-        yield await _api
-            .all()
-            .whenComplete(completer.complete)
-            .catchError(completer.completeError);
+        yield BlocState(
+          data: await _api
+              .all()
+              .whenComplete(completer.complete)
+              .catchError(completer.completeError),
+        );
         break;
 
       case FilterDevicesEvent:

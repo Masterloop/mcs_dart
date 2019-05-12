@@ -1,10 +1,11 @@
 import 'package:masterloop_bloc/src/bloc_list.dart';
+import 'package:masterloop_bloc/src/state.dart';
 import 'package:masterloop_core/masterloop_core.dart' show Predicate, Template;
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:masterloop_api/masterloop_api.dart' show TemplatesApi;
 
-class TemplatesBloc extends Bloc<TemplatesEvent, Iterable<Template>>
+class TemplatesBloc extends Bloc<TemplatesEvent, BlocState<Iterable<Template>>>
     with ListBloc {
   final TemplatesApi _api;
 
@@ -14,17 +15,20 @@ class TemplatesBloc extends Bloc<TemplatesEvent, Iterable<Template>>
         _api = api;
 
   @override
-  Iterable<Template> get initialState => null;
+  BlocState<Iterable<Template>> get initialState => BlocState();
 
   @override
-  Stream<Iterable<Template>> mapEventToState(TemplatesEvent event) async* {
+  Stream<BlocState<Iterable<Template>>> mapEventToState(
+      TemplatesEvent event) async* {
     switch (event.runtimeType) {
       case RefreshTemplatesEvent:
         final completer = (event as RefreshTemplatesEvent).completer;
 
-        yield await _api.all
-            .whenComplete(completer.complete)
-            .catchError(completer.completeError);
+        yield BlocState(
+          data: await _api.all
+              .whenComplete(completer.complete)
+              .catchError(completer.completeError),
+        );
         break;
 
       case FilterTemplatesEvent:

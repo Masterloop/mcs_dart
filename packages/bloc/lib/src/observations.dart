@@ -3,11 +3,13 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:masterloop_api/masterloop_api.dart' show DeviceApi;
 import 'package:masterloop_bloc/src/bloc_list.dart';
+import 'package:masterloop_bloc/src/state.dart';
 import 'package:masterloop_core/masterloop_core.dart'
     show Observation, ObservationValue, Predicate;
 
 class ObservationsBloc
-    extends Bloc<ObservationsEvent, Iterable<ObservationState>> with ListBloc {
+    extends Bloc<ObservationsEvent, BlocState<Iterable<ObservationState>>>
+    with ListBloc {
   final DeviceApi _api;
 
   ObservationsBloc({
@@ -16,7 +18,7 @@ class ObservationsBloc
         _api = api;
 
   @override
-  Iterable<ObservationState> get initialState => null;
+  BlocState<Iterable<ObservationState>> get initialState => BlocState();
 
   @override
   void dispose() {
@@ -26,7 +28,7 @@ class ObservationsBloc
   }
 
   @override
-  Stream<Iterable<ObservationState>> mapEventToState(
+  Stream<BlocState<Iterable<ObservationState>>> mapEventToState(
       ObservationsEvent event) async* {
     switch (event.runtimeType) {
       case RefreshObservationsEvent:
@@ -47,11 +49,13 @@ class ObservationsBloc
             )
             .catchError(completer.completeError);
 
-        yield observations.map(
-          (o) => ObservationState(
-                observation: o,
-                value: values[o.id],
-              ),
+        yield BlocState(
+          data: observations.map(
+            (o) => ObservationState(
+                  observation: o,
+                  value: values[o.id],
+                ),
+          ),
         );
 
         completer.complete();
@@ -67,22 +71,24 @@ class ObservationsBloc
             .where((v) => v is ObservationValue)
             .cast<ObservationValue>()
             .map(
-              (value) => List<ObservationState>.from(currentState).map(
-                    (o) {
-                      if (o.observation.id == value.id) {
-                        return ObservationState(
-                          observation: o.observation,
-                          value: value,
-                        );
-                      } else {
-                        return o;
-                      }
-                    },
+              (value) => BlocState(
+                    data: List<ObservationState>.from(currentState.data).map(
+                      (o) {
+                        if (o.observation.id == value.id) {
+                          return ObservationState(
+                            observation: o.observation,
+                            value: value,
+                          );
+                        } else {
+                          return o;
+                        }
+                      },
+                    ),
                   ),
             );
         break;
 
-      case UbsubscribeObservationsEvent:
+      case UnsubscribeObservationsEvent:
         await _api.unsubscribe();
         break;
 
@@ -143,4 +149,4 @@ class SubscribeObservationsEvent implements ObservationsEvent {
   }) : assert(init != null);
 }
 
-class UbsubscribeObservationsEvent implements ObservationsEvent {}
+class UnsubscribeObservationsEvent implements ObservationsEvent {}

@@ -28,20 +28,6 @@ class DeviceBloc extends Bloc<DeviceEvent, Device> {
             .whenComplete(completer.complete)
             .catchError(completer.completeError);
         break;
-
-      case SendCommandEvent:
-        final sendCommandEvent = event as SendCommandEvent;
-        final completer = sendCommandEvent.completer;
-
-        _api
-            .sendCommand(
-              id: sendCommandEvent.id,
-              arguments: sendCommandEvent.arguments,
-              expiresIn: sendCommandEvent.expiresIn,
-            )
-            .then((_) => completer.complete(true))
-            .catchError((_) => completer.complete(false));
-        break;
     }
   }
 }
@@ -50,18 +36,4 @@ abstract class DeviceEvent {}
 
 class RefreshDeviceEvent implements DeviceEvent {
   final Completer completer = Completer();
-}
-
-class SendCommandEvent implements DeviceEvent {
-  final Completer<bool> completer = Completer();
-
-  final int id;
-  final Iterable<Map<String, dynamic>> arguments;
-  final Duration expiresIn;
-
-  SendCommandEvent({
-    this.id,
-    this.arguments,
-    this.expiresIn,
-  }) : assert(id != null);
 }
