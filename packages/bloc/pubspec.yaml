@@ -5,8 +5,11 @@ author: Shovel Maman
 homepage:
 
 environment:
-  sdk: ">=2.0.0 <3.0.0"
+  sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
+  bloc: ^0.13.0
+  masterloop_api:
+    path: ../api
   masterloop_core:
     path: ../core

@@ -25,4 +25,4 @@ typedef Future<Stream<T>> SubscribeCallback<T>(List<int> ids, [bool init]);
 typedef Future<void> UnsubscribeCallback();
 
 //Used as a Tester of type T, returns true if passed test else false
-typedef bool Test<T>(T item);
+typedef bool Predicate<T>(T item);

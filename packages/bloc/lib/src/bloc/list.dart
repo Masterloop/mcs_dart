@@ -1,12 +1,12 @@
 import 'dart:async';
-import 'package:masterloop_core/src/deftypes.dart' show ValueGetter, Test;
+import 'package:masterloop_core/src/deftypes.dart' show ValueGetter, Predicate;
 import 'package:masterloop_bloc/src/bloc/base.dart';
 
 //ListBloc used for bloc which holds Lists.
 //Implemented sorting and filtering for ease of use
 mixin ListBloc<T, S> on BaseBloc<T, Iterable<S>> {
   Comparator<S> _comparator;
-  Test<S> _tester;
+  Predicate<S> _tester;
   ValueGetter<Future<T>> get onRefresh;
 
   Stream<Iterable<S>> get state => super.state.map((items) {
@@ -34,7 +34,7 @@ mixin ListBloc<T, S> on BaseBloc<T, Iterable<S>> {
     }
   }
 
-  void filter(Test<S> tester) {
+  void filter(Predicate<S> tester) {
     _tester = tester;
     if (current != null) {
       dispatch(current);
