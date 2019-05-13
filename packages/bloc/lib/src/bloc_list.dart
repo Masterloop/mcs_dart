@@ -11,11 +11,7 @@ mixin ListBloc<E extends ListEvent, S> on Bloc<E, BlocState<Iterable<S>>> {
   Predicate<S> _tester;
 
   @override
-  Stream<BlocState<Iterable<S>>> transform(
-    Stream events,
-    Stream<BlocState<Iterable<S>>> Function(E) next,
-  ) =>
-      super.transform(events, next).distinct().map((state) {
+  Stream<BlocState<Iterable<S>>> get state => super.state.map((state) {
         if (state == null || !state.hasData || state.data.isEmpty) return state;
         final items = state.data;
 
@@ -28,22 +24,18 @@ mixin ListBloc<E extends ListEvent, S> on Bloc<E, BlocState<Iterable<S>>> {
         }
 
         return BlocState(
-          data: mappedItems,
+          data: List<S>.unmodifiable(mappedItems),
         );
-      }).distinct();
+      });
 
   @override
   Stream<BlocState<Iterable<S>>> mapEventToState(event) async* {
-    switch (event.runtimeType) {
-      case SortListEvent:
-        _comparator = (event as SortListEvent<S>).comparator;
-        yield BlocState(data: List.from(currentState.data));
-        break;
-
-      case FilterListEvent:
-        _tester = (event as FilterListEvent<S>).tester;
-        yield BlocState(data: List.from(currentState.data));
-        break;
+    if (event is SortListEvent) {
+      _comparator = (event as SortListEvent<S>).comparator;
+      yield BlocState(data: List<S>.unmodifiable(currentState.data));
+    } else if (event is FilterListEvent) {
+      _tester = (event as FilterListEvent<S>).tester;
+      yield BlocState(data: List<S>.unmodifiable(currentState.data));
     }
   }
 }

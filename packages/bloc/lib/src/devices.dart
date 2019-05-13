@@ -35,7 +35,7 @@ class DevicesBloc extends Bloc<DevicesEvent, BlocState<Iterable<Device>>>
 
       case FilterDevicesEvent:
       case SortDevicesEvent:
-        super.mapEventToState(event);
+        yield* super.mapEventToState(event);
         break;
     }
   }

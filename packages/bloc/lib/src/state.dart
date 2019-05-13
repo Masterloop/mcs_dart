@@ -4,7 +4,7 @@ class BlocState<S> {
 
   BlocState({
     this.data,
-  }) : hasData = data == null;
+  }) : hasData = data != null;
 
   @override
   operator ==(other) =>

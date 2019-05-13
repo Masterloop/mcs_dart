@@ -49,7 +49,7 @@ class CommandsBloc extends Bloc<CommandsEvent, BlocState<Iterable<Command>>>
 
       case FilterCommandsEvent:
       case SortCommandsEvent:
-        super.mapEventToState(event);
+        yield* super.mapEventToState(event);
         break;
     }
   }

@@ -33,7 +33,7 @@ class TemplatesBloc extends Bloc<TemplatesEvent, BlocState<Iterable<Template>>>
 
       case FilterTemplatesEvent:
       case SortTemplatesEvent:
-        super.mapEventToState(event);
+        yield* super.mapEventToState(event);
         break;
     }
   }

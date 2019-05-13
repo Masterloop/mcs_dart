@@ -94,7 +94,7 @@ class ObservationsBloc
 
       case FilterObservationsEvent:
       case SortObservationsEvent:
-        super.mapEventToState(event);
+        yield* super.mapEventToState(event);
         break;
     }
   }
