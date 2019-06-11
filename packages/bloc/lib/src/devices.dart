@@ -23,14 +23,25 @@ class DevicesBloc extends Bloc<DevicesEvent, BlocState<Iterable<Device>>>
       DevicesEvent event) async* {
     switch (event.runtimeType) {
       case RefreshDevicesEvent:
-        final completer = (event as RefreshDevicesEvent).completer;
+        final refresh = event as RefreshDevicesEvent;
+        final completer = refresh.completer;
+        final tid = refresh.tid;
 
-        yield BlocState(
-          data: await _api
-              .all()
-              .whenComplete(completer.complete)
-              .catchError(completer.completeError),
-        );
+        if (tid == null) {
+          yield BlocState(
+            data: await _api
+                .all()
+                .whenComplete(completer.complete)
+                .catchError(completer.completeError),
+          );
+        } else {
+          yield BlocState(
+            data: await _api
+                .template(tid: tid)
+                .whenComplete(completer.complete)
+                .catchError(completer.completeError),
+          );
+        }
         break;
 
       case FilterDevicesEvent:
@@ -45,6 +56,9 @@ abstract class DevicesEvent implements ListEvent {}
 
 class RefreshDevicesEvent implements DevicesEvent {
   final Completer completer = Completer();
+  final String tid;
+
+  RefreshDevicesEvent({this.tid});
 }
 
 class FilterDevicesEvent extends FilterListEvent<Device>

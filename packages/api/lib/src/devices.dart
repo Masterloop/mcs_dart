@@ -37,6 +37,18 @@ class DevicesApi implements Api {
                 ),
           );
 
+  Future<Iterable<Device>> template({String tid}) {
+    assert(tid != null);
+
+    return _client.get("/api/templates/$tid/devices").then(
+          (response) => List<Device>.unmodifiable(
+                response.data.map(
+                  (d) => Device.fromJson(d),
+                ),
+              ),
+        );
+  }
+
   Future<Stream<LiveValue>> _subscribeDevice(
     String mid,
     Iterable<int> observations,
