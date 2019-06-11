@@ -14,9 +14,9 @@ class RabbitMQConnection {
     Map<String, dynamic> connectionData,
   }) async {
     assert(connectionData != null);
-    final webScoket = await _connectToWebSocket();
+    final webSocket = await _connectToWebSocket();
     final stompClient = await _connectToStomp(
-      webScoket: webScoket,
+      webSocket: webSocket,
       connectionData: connectionData,
     );
 
@@ -32,14 +32,14 @@ class RabbitMQConnection {
       WebSocket.connect("wss://live.masterloop.net:443/ws");
 
   static Future<StompClient> _connectToStomp({
-    WebSocket webScoket,
+    WebSocket webSocket,
     Map<String, dynamic> connectionData,
   }) {
-    assert(webScoket != null);
+    assert(webSocket != null);
     assert(connectionData != null);
 
     return StompClient.connect(
-      WebSocketStompConnector(webScoket),
+      WebSocketStompConnector(webSocket),
       heartbeat: [0, 0],
       host: connectionData["VirtualHost"],
       login: connectionData["Username"],
