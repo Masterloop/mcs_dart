@@ -31,27 +31,30 @@ class ObservationsBloc
       case RefreshObservationsEvent:
         final completer = (event as RefreshObservationsEvent).completer;
 
-        final observations = await _api.template
-            .then(
-              (template) => template.observations,
-            )
-            .catchError(completer.completeError);
-        final values = await _api.current
-            .then(
-              (values) => Map.fromEntries(
-                    values.map(
-                      (v) => MapEntry<int, ObservationValue>(v.id, v),
-                    ),
+        final jobs = await Future.wait([
+          _api.template.then(
+            (template) => template.observations,
+          ),
+          _api.current.then(
+            (values) => Map.fromEntries(
+                  values.map(
+                    (v) => MapEntry<int, ObservationValue>(v.id, v),
                   ),
-            )
-            .catchError(completer.completeError);
-        print("Refreshing Observations Bloc");
-        yield BlocState(
-          data: observations.map(
-            (o) => ObservationState(
-                  observation: o,
-                  value: values[o.id],
                 ),
+          )
+        ]).catchError(completer.completeError);
+
+        final observations = jobs[0] as Iterable<Observation>;
+        final values = jobs[1] as Map<int, ObservationValue>;
+
+        yield BlocState(
+          data: List.unmodifiable(
+            observations.map(
+              (o) => ObservationState(
+                    observation: o,
+                    value: values[o.id],
+                  ),
+            ),
           ),
         );
 
