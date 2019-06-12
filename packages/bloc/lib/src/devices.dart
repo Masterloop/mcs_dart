@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
 import 'package:masterloop_api/masterloop_api.dart' show DevicesApi;
+import 'package:masterloop_bloc/src/base.dart';
 import 'package:masterloop_bloc/src/bloc_list.dart';
 import 'package:masterloop_bloc/src/state.dart';
 import 'package:masterloop_core/masterloop_core.dart' show Device, Predicate;
 
-class DevicesBloc extends Bloc<DevicesEvent, BlocState<Iterable<Device>>>
+class DevicesBloc extends BaseBloc<DevicesEvent, Iterable<Device>>
     with ListBloc {
   final DevicesApi _api;
 
@@ -14,9 +14,6 @@ class DevicesBloc extends Bloc<DevicesEvent, BlocState<Iterable<Device>>>
     DevicesApi api,
   })  : assert(api != null),
         _api = api;
-
-  @override
-  BlocState<Iterable<Device>> get initialState => BlocState();
 
   @override
   Stream<BlocState<Iterable<Device>>> mapEventToState(

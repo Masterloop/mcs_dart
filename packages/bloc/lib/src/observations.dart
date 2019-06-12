@@ -1,14 +1,14 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
 import 'package:masterloop_api/masterloop_api.dart' show DeviceApi;
+import 'package:masterloop_bloc/src/base.dart';
 import 'package:masterloop_bloc/src/bloc_list.dart';
 import 'package:masterloop_bloc/src/state.dart';
 import 'package:masterloop_core/masterloop_core.dart'
     show Observation, ObservationValue, Predicate;
 
 class ObservationsBloc
-    extends Bloc<ObservationsEvent, BlocState<Iterable<ObservationState>>>
+    extends BaseBloc<ObservationsEvent, Iterable<ObservationState>>
     with ListBloc {
   final DeviceApi _api;
 
@@ -16,9 +16,6 @@ class ObservationsBloc
     DeviceApi api,
   })  : assert(api != null),
         _api = api;
-
-  @override
-  BlocState<Iterable<ObservationState>> get initialState => BlocState();
 
   @override
   void dispose() {
@@ -48,7 +45,7 @@ class ObservationsBloc
                   ),
             )
             .catchError(completer.completeError);
-
+        print("Refreshing Observations Bloc");
         yield BlocState(
           data: observations.map(
             (o) => ObservationState(
@@ -72,17 +69,19 @@ class ObservationsBloc
             .cast<ObservationValue>()
             .map(
               (value) => BlocState(
-                    data: List<ObservationState>.from(currentState.data).map(
-                      (o) {
-                        if (o.observation.id == value.id) {
-                          return ObservationState(
-                            observation: o.observation,
-                            value: value,
-                          );
-                        } else {
-                          return o;
-                        }
-                      },
+                    data: List<ObservationState>.from(
+                      currentState.data.map(
+                        (o) {
+                          if (o.observation.id == value.id) {
+                            return ObservationState(
+                              observation: o.observation,
+                              value: value,
+                            );
+                          } else {
+                            return o;
+                          }
+                        },
+                      ),
                     ),
                   ),
             );

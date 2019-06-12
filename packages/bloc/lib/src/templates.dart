@@ -1,11 +1,11 @@
+import 'package:masterloop_bloc/src/base.dart';
 import 'package:masterloop_bloc/src/bloc_list.dart';
 import 'package:masterloop_bloc/src/state.dart';
 import 'package:masterloop_core/masterloop_core.dart' show Predicate, Template;
 import 'dart:async';
-import 'package:bloc/bloc.dart';
 import 'package:masterloop_api/masterloop_api.dart' show TemplatesApi;
 
-class TemplatesBloc extends Bloc<TemplatesEvent, BlocState<Iterable<Template>>>
+class TemplatesBloc extends BaseBloc<TemplatesEvent, Iterable<Template>>
     with ListBloc {
   final TemplatesApi _api;
 
@@ -13,9 +13,6 @@ class TemplatesBloc extends Bloc<TemplatesEvent, BlocState<Iterable<Template>>>
     TemplatesApi api,
   })  : assert(api != null),
         _api = api;
-
-  @override
-  BlocState<Iterable<Template>> get initialState => BlocState();
 
   @override
   Stream<BlocState<Iterable<Template>>> mapEventToState(
