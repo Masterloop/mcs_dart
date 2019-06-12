@@ -5,14 +5,13 @@ import 'package:masterloop_api/masterloop_api.dart' show DeviceApi;
 import 'package:masterloop_core/masterloop_core.dart' show Device;
 
 class DeviceBloc extends Bloc<DeviceEvent, Device> {
-  final String mid;
   final DeviceApi _api;
 
+  String get mid => _api.mid;
+
   DeviceBloc({
-    this.mid,
     DeviceApi api,
-  })  : assert(mid != null),
-        assert(api != null),
+  })  : assert(api != null),
         _api = api;
 
   @override
