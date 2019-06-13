@@ -7,6 +7,7 @@ class TemplatesApi implements Api {
   static final String basePath = "/api/templates";
 
   final Dio _client;
+
   Future<Iterable<Template>> get all => _client
       .get(basePath)
       .then(

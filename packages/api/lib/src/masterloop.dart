@@ -24,11 +24,9 @@ class MasterloopApi implements Api {
       .then((response) => true)
       .catchError((_) => false);
 
-  TemplatesApi _templates;
-  TemplatesApi get templates => _templates ??= TemplatesApi(client: _client);
+  TemplatesApi get templates => TemplatesApi(client: _client);
 
-  DevicesApi _devices;
-  DevicesApi get devices => _devices ??= DevicesApi(client: _client);
+  DevicesApi get devices => DevicesApi(client: _client);
 
   MasterloopApi({
     Dio client,
@@ -57,8 +55,6 @@ class MasterloopApi implements Api {
 
   Future<bool> disconnect() {
     token = null;
-    _devices = null;
-    _templates = null;
     return Future.value(true);
   }
 }
