@@ -8,12 +8,11 @@ import 'package:masterloop_core/masterloop_core.dart' show Device, Predicate;
 
 class DevicesBloc extends BaseBloc<DevicesEvent, Iterable<Device>>
     with ListBloc {
-  final DevicesApi _api;
+  final DevicesApi api;
 
   DevicesBloc({
-    DevicesApi api,
-  })  : assert(api != null),
-        _api = api;
+    this.api,
+  }) : assert(api != null);
 
   @override
   Stream<BlocState<Iterable<Device>>> mapEventToState(
@@ -26,14 +25,14 @@ class DevicesBloc extends BaseBloc<DevicesEvent, Iterable<Device>>
 
         if (tid == null) {
           yield BlocState(
-            data: await _api
+            data: await api
                 .all()
                 .whenComplete(completer.complete)
                 .catchError(completer.completeError),
           );
         } else {
           yield BlocState(
-            data: await _api
+            data: await api
                 .template(tid: tid)
                 .whenComplete(completer.complete)
                 .catchError(completer.completeError),

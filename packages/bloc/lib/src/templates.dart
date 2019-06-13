@@ -7,12 +7,11 @@ import 'package:masterloop_api/masterloop_api.dart' show TemplatesApi;
 
 class TemplatesBloc extends BaseBloc<TemplatesEvent, Iterable<Template>>
     with ListBloc {
-  final TemplatesApi _api;
+  final TemplatesApi api;
 
   TemplatesBloc({
-    TemplatesApi api,
-  })  : assert(api != null),
-        _api = api;
+    this.api,
+  }) : assert(api != null);
 
   @override
   Stream<BlocState<Iterable<Template>>> mapEventToState(
@@ -22,7 +21,7 @@ class TemplatesBloc extends BaseBloc<TemplatesEvent, Iterable<Template>>
         final completer = (event as RefreshTemplatesEvent).completer;
 
         yield BlocState(
-          data: await _api.all
+          data: await api.all
               .whenComplete(completer.complete)
               .catchError(completer.completeError),
         );

@@ -1,47 +1,62 @@
 import 'dart:async';
 
-import 'package:masterloop_api/masterloop_api.dart' show DeviceApi;
 import 'package:masterloop_bloc/src/base.dart';
 import 'package:masterloop_bloc/src/bloc_list.dart';
+import 'package:masterloop_bloc/src/device.dart';
 import 'package:masterloop_bloc/src/state.dart';
 import 'package:masterloop_core/masterloop_core.dart'
-    show Observation, ObservationValue, Predicate;
+    show Observation, ObservationValue, Predicate, DataType;
+import 'package:rxdart/subjects.dart';
+import 'package:rxdart/rxdart.dart';
 
 class ObservationsBloc
-    extends BaseBloc<ObservationsEvent, Iterable<ObservationState>>
+    extends BaseBloc<ObservationsEvent, Iterable<ObservationWithValue>>
     with ListBloc {
-  final DeviceApi _api;
+  final BehaviorSubject<bool> _subscribedSubject =
+      BehaviorSubject.seeded(false);
+  final DeviceBloc _bloc;
+
+  bool get isSubscribed => _subscribedSubject.value;
+  Stream<bool> get onSubscribedChanged => _subscribedSubject.distinct();
 
   ObservationsBloc({
-    DeviceApi api,
-  })  : assert(api != null),
-        _api = api;
+    DeviceBloc bloc,
+  })  : assert(bloc != null),
+        _bloc = bloc;
 
   @override
   void dispose() {
-    _api.unsubscribe();
+    _subscribedSubject
+      ..add(false)
+      ..close();
+    _bloc.api.unsubscribe();
 
     super.dispose();
   }
 
   @override
-  Stream<BlocState<Iterable<ObservationState>>> mapEventToState(
-      ObservationsEvent event) async* {
+  Stream<BlocState<Iterable<ObservationWithValue>>> mapEventToState(
+    ObservationsEvent event,
+  ) async* {
     switch (event.runtimeType) {
       case RefreshObservationsEvent:
         final completer = (event as RefreshObservationsEvent).completer;
 
+        final refresh = RefreshDeviceEvent();
+        _bloc.dispatch(refresh);
+        await refresh.completer.future;
+
         final jobs = await Future.wait([
-          _api.template.then(
-            (template) => template.observations,
-          ),
-          _api.current.then(
+          _bloc.state.take(1).map((s) => s.data).single.then(
+                (device) => device.template.observations,
+              ),
+          _bloc.api.current.then(
             (values) => Map.fromEntries(
                   values.map(
                     (v) => MapEntry<int, ObservationValue>(v.id, v),
                   ),
                 ),
-          )
+          ),
         ]).catchError(completer.completeError);
 
         final observations = jobs[0] as Iterable<Observation>;
@@ -50,7 +65,7 @@ class ObservationsBloc
         yield BlocState(
           data: List.unmodifiable(
             observations.map(
-              (o) => ObservationState(
+              (o) => ObservationWithValue.from(
                     observation: o,
                     value: values[o.id],
                   ),
@@ -62,36 +77,45 @@ class ObservationsBloc
         break;
 
       case SubscribeObservationsEvent:
-        final stream = await _api.subscribe(
+        _subscribedSubject.add(true);
+        final stream = await _bloc.api.subscribe(
           observations: (event as SubscribeObservationsEvent).ids,
           init: (event as SubscribeObservationsEvent).init,
         );
 
-        yield* stream
+        Observable(stream)
             .where((v) => v is ObservationValue)
             .cast<ObservationValue>()
-            .map(
-              (value) => BlocState(
-                    data: List<ObservationState>.from(
-                      currentState.data.map(
-                        (o) {
-                          if (o.observation.id == value.id) {
-                            return ObservationState(
-                              observation: o.observation,
-                              value: value,
-                            );
-                          } else {
-                            return o;
-                          }
-                        },
-                      ),
-                    ),
-                  ),
+            .withLatestFrom(
+          state.map(
+            (observations) => Map.fromEntries(
+                  observations.data.map((o) => MapEntry(o.id, o)),
+                ),
+          ),
+          (value, Map<int, ObservationWithValue> observations) {
+            observations[value.id] = ObservationWithValue.from(
+              observation: observations[value.id],
+              value: value,
             );
+
+            return SetObservationsEvent(
+              observations: List<ObservationWithValue>.from(
+                observations.values,
+              ),
+            );
+          },
+        ).forEach(dispatch);
         break;
 
       case UnsubscribeObservationsEvent:
-        await _api.unsubscribe();
+        _subscribedSubject.add(false);
+        await _bloc.api.unsubscribe();
+        break;
+
+      case SetObservationsEvent:
+        yield BlocState(
+          data: (event as SetObservationsEvent).observations,
+        );
         break;
 
       case FilterObservationsEvent:
@@ -102,42 +126,70 @@ class ObservationsBloc
   }
 }
 
-class ObservationState {
-  final Observation observation;
-  final ObservationValue value;
+class ObservationWithValue<T> extends Observation {
+  final T value;
+  final DateTime timestamp;
 
-  ObservationState({
-    this.observation,
+  ObservationWithValue({
+    int id,
+    String name,
+    String description,
+    DataType dataType,
     this.value,
-  }) : assert(observation != null);
+    this.timestamp,
+  }) : super(
+          id: id,
+          name: name,
+          description: description,
+          dataType: dataType,
+        );
+
+  ObservationWithValue.from({
+    Observation observation,
+    ObservationValue value,
+  })  : value = value?.value,
+        timestamp = value?.timestamp,
+        super(
+          id: observation.id,
+          name: observation.name,
+          description: observation.description,
+          dataType: observation.dataType,
+        );
 
   @override
   bool operator ==(other) =>
-      other is ObservationState &&
-      other.observation == observation &&
-      other.value == value;
+      other is ObservationWithValue &&
+      super == other &&
+      other.value == value &&
+      other.timestamp == timestamp;
 
   @override
-  int get hashCode => observation.hashCode ^ value.hashCode;
+  int get hashCode => super.hashCode ^ value.hashCode ^ timestamp.hashCode;
 }
 
 abstract class ObservationsEvent implements ListEvent {}
+
+class SetObservationsEvent implements ObservationsEvent {
+  final Iterable<ObservationWithValue> observations;
+
+  SetObservationsEvent({this.observations});
+}
 
 class RefreshObservationsEvent implements ObservationsEvent {
   final Completer completer = Completer();
 }
 
-class FilterObservationsEvent extends FilterListEvent<ObservationState>
+class FilterObservationsEvent extends FilterListEvent<ObservationWithValue>
     implements ObservationsEvent {
   FilterObservationsEvent({
-    Predicate<ObservationState> tester,
+    Predicate<ObservationWithValue> tester,
   }) : super(tester: tester);
 }
 
-class SortObservationsEvent extends SortListEvent<ObservationState>
+class SortObservationsEvent extends SortListEvent<ObservationWithValue>
     implements ObservationsEvent {
   SortObservationsEvent({
-    Comparator<ObservationState> comparator,
+    Comparator<ObservationWithValue> comparator,
   }) : super(comparator: comparator);
 }
 

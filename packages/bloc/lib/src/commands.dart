@@ -1,19 +1,19 @@
 import 'dart:async';
 
-import 'package:masterloop_api/masterloop_api.dart' show DeviceApi;
 import 'package:masterloop_bloc/src/base.dart';
 import 'package:masterloop_bloc/src/bloc_list.dart';
+import 'package:masterloop_bloc/src/device.dart';
 import 'package:masterloop_bloc/src/state.dart';
 import 'package:masterloop_core/masterloop_core.dart' show Command, Predicate;
 
 class CommandsBloc extends BaseBloc<CommandsEvent, Iterable<Command>>
     with ListBloc {
-  final DeviceApi _api;
+  final DeviceBloc _bloc;
 
   CommandsBloc({
-    DeviceApi api,
-  })  : assert(api != null),
-        _api = api;
+    DeviceBloc bloc,
+  })  : assert(bloc != null),
+        _bloc = bloc;
 
   @override
   Stream<BlocState<Iterable<Command>>> mapEventToState(
@@ -22,9 +22,16 @@ class CommandsBloc extends BaseBloc<CommandsEvent, Iterable<Command>>
       case RefreshCommandsEvent:
         final completer = (event as RefreshCommandsEvent).completer;
 
+        final refresh = RefreshDeviceEvent();
+        _bloc.dispatch(refresh);
+        await refresh.completer.future;
+
         yield BlocState(
-          data: await _api.template
-              .then((template) => template.commands)
+          data: await _bloc.state
+              .take(1)
+              .map((s) => s.data)
+              .single
+              .then((device) => device.template.commands)
               .whenComplete(completer.complete)
               .catchError(completer.completeError),
         );
@@ -34,7 +41,7 @@ class CommandsBloc extends BaseBloc<CommandsEvent, Iterable<Command>>
         final sendCommandEvent = event as SendCommandEvent;
         final completer = sendCommandEvent.completer;
 
-        _api
+        _bloc.api
             .sendCommand(
               id: sendCommandEvent.id,
               arguments: sendCommandEvent.arguments,
