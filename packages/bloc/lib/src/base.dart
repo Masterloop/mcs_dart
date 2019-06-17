@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:masterloop_bloc/src/state.dart';
 
@@ -8,4 +10,8 @@ abstract class BaseBloc<E, S> extends Bloc<E, BlocState<S>> {
   @override
   Stream<BlocState<S>> get state =>
       super.state.where((s) => s.hasData).distinct();
+}
+
+mixin WithCompleter<T> {
+  final Completer<T> completer = Completer();
 }
