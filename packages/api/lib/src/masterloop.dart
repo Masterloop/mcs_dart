@@ -6,9 +6,8 @@ import 'package:masterloop_core/masterloop_core.dart' show Api;
 import 'dart:async';
 
 class MasterloopApi implements Api {
-  static const String hostUrl = "https://api.masterloop.net";
+  static const String url = "https://api.masterloop.net";
 
-  final String host;
   final Dio _client;
 
   String get token =>
@@ -16,8 +15,8 @@ class MasterloopApi implements Api {
   void set token(String token) =>
       _client.options.headers["Authorization"] = "Bearer $token";
 
-  String get baseUrl => _client.options.baseUrl;
-  void set baseUrl(String url) => _client.options.baseUrl = url;
+  String get host => _client.options.baseUrl;
+  void set host(String host) => _client.options.baseUrl = host;
 
   Future<bool> get isConnected => _client
       .get("/api/tools/ping")
@@ -30,26 +29,29 @@ class MasterloopApi implements Api {
 
   MasterloopApi({
     Dio client,
-    this.host,
+    String token,
+    String host,
   })  : _client = client ??
             Dio(
               BaseOptions(
-                baseUrl: host ?? hostUrl,
                 connectTimeout: 30000,
                 receiveTimeout: 30000,
               ),
             ),
-        super();
+        super() {
+    this.host = host ?? url;
+    this.token = token;
+  }
 
   Future<void> connect({String username, String password}) => _client.post(
         "/token",
         options: Options(
           contentType: ContentType.parse("application/x-www-form-urlencoded"),
         ),
-        data: {
+        data: <String, String>{
+          "grant_type": "password",
           "username": username,
           "password": password,
-          "grant_type": "password",
         },
       ).then((response) => token = response.data["access_token"]);
 
