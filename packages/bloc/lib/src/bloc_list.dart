@@ -4,11 +4,15 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:masterloop_bloc/src/state.dart';
+import 'package:masterloop_bloc/src/base.dart';
 import 'package:masterloop_core/masterloop_core.dart' show Predicate;
 
-mixin ListBloc<E extends ListEvent, S> on Bloc<E, BlocState<Iterable<S>>> {
+abstract class ListBloc<S> extends Bloc<ListEvent<S>, BlocState<Iterable<S>>> {
   Comparator<S> _comparator;
   Predicate<S> _tester;
+
+  @override
+  final BlocState<Iterable<S>> initialState = BlocState();
 
   @override
   Stream<BlocState<Iterable<S>>> get state => super.state.map((state) {
@@ -30,25 +34,53 @@ mixin ListBloc<E extends ListEvent, S> on Bloc<E, BlocState<Iterable<S>>> {
 
   @override
   Stream<BlocState<Iterable<S>>> mapEventToState(event) async* {
-    if (event is SortListEvent) {
-      _comparator = (event as SortListEvent<S>).comparator;
-      yield BlocState(data: List<S>.unmodifiable(currentState.data));
-    } else if (event is FilterListEvent) {
-      _tester = (event as FilterListEvent<S>).tester;
-      yield BlocState(data: List<S>.unmodifiable(currentState.data));
+    switch (event.runtimeType) {
+      case SortListEvent:
+        _comparator = (event as SortListEvent<S>).comparator;
+
+        yield BlocState(
+          data: List<S>.unmodifiable(
+            currentState.data,
+          ),
+        );
+        break;
+
+      case FilterListEvent:
+        _tester = (event as FilterListEvent<S>).tester;
+
+        yield BlocState(
+          data: List<S>.unmodifiable(
+            currentState.data,
+          ),
+        );
+        break;
+
+      case RefreshListEvent:
+        final refreshEvent = event as RefreshListEvent;
+        final completer = refreshEvent.completer;
+        yield BlocState(
+          data: await refresh(refreshEvent)
+              .whenComplete(completer.complete)
+              .catchError(completer.completeError),
+        );
+        break;
     }
   }
+
+  Future<Iterable<S>> refresh([RefreshListEvent event]);
 }
 
-abstract class ListEvent {}
+abstract class ListEvent<S> {}
 
-class SortListEvent<S> implements ListEvent {
+class RefreshListEvent<S> with WithCompleter implements ListEvent<S> {}
+
+class SortListEvent<S> implements ListEvent<S> {
   final Comparator<S> comparator;
 
   SortListEvent({this.comparator});
 }
 
-class FilterListEvent<S> implements ListEvent {
+class FilterListEvent<S> implements ListEvent<S> {
   final Predicate<S> tester;
 
   FilterListEvent({this.tester});

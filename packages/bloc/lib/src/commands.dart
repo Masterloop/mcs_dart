@@ -1,13 +1,11 @@
 import 'dart:async';
 
-import 'package:masterloop_bloc/src/base.dart';
 import 'package:masterloop_bloc/src/bloc_list.dart';
 import 'package:masterloop_bloc/src/device.dart';
 import 'package:masterloop_bloc/src/state.dart';
-import 'package:masterloop_core/masterloop_core.dart' show Command, Predicate;
+import 'package:masterloop_core/masterloop_core.dart' show Command;
 
-class CommandsBloc extends BaseBloc<CommandsEvent, Iterable<Command>>
-    with ListBloc {
+class CommandsBloc extends ListBloc<Command> {
   final DeviceBloc _bloc;
 
   CommandsBloc({
@@ -17,26 +15,8 @@ class CommandsBloc extends BaseBloc<CommandsEvent, Iterable<Command>>
 
   @override
   Stream<BlocState<Iterable<Command>>> mapEventToState(
-      CommandsEvent event) async* {
+      ListEvent<Command> event) async* {
     switch (event.runtimeType) {
-      case RefreshCommandsEvent:
-        final completer = (event as RefreshCommandsEvent).completer;
-
-        final refresh = RefreshDeviceEvent();
-        _bloc.dispatch(refresh);
-        await refresh.completer.future;
-
-        yield BlocState(
-          data: await _bloc.state
-              .take(1)
-              .map((s) => s.data)
-              .single
-              .then((device) => device.template.commands)
-              .whenComplete(completer.complete)
-              .catchError(completer.completeError),
-        );
-        break;
-
       case SendCommandEvent:
         final sendCommandEvent = event as SendCommandEvent;
         final completer = sendCommandEvent.completer;
@@ -51,19 +31,31 @@ class CommandsBloc extends BaseBloc<CommandsEvent, Iterable<Command>>
             .catchError((_) => completer.complete(false));
         break;
 
-      case FilterCommandsEvent:
-      case SortCommandsEvent:
+      case FilterListEvent:
+      case SortListEvent:
+      case RefreshListEvent:
         yield* super.mapEventToState(event);
         break;
     }
   }
+
+  @override
+  Future<Iterable<Command>> refresh([RefreshListEvent event]) async {
+    final completer = event.completer;
+
+    final refresh = RefreshDeviceEvent();
+    _bloc.dispatch(refresh);
+    await refresh.completer.future.catchError(completer.completeError);
+
+    return await _bloc.state
+        .take(1)
+        .map((s) => s.data)
+        .single
+        .then((device) => device.template.commands);
+  }
 }
 
-abstract class CommandsEvent implements ListEvent {}
-
-class RefreshCommandsEvent implements CommandsEvent {
-  final Completer completer = Completer();
-}
+abstract class CommandsEvent implements ListEvent<Command> {}
 
 class SendCommandEvent implements CommandsEvent {
   final Completer<bool> completer = Completer();
@@ -77,18 +69,4 @@ class SendCommandEvent implements CommandsEvent {
     this.arguments,
     this.expiresIn,
   }) : assert(id != null);
-}
-
-class FilterCommandsEvent extends FilterListEvent<Command>
-    implements CommandsEvent {
-  FilterCommandsEvent({
-    Predicate<Command> tester,
-  }) : super(tester: tester);
-}
-
-class SortCommandsEvent extends SortListEvent<Command>
-    implements CommandsEvent {
-  SortCommandsEvent({
-    Comparator<Command> comparator,
-  }) : super(comparator: comparator);
 }

@@ -3,11 +3,9 @@ import 'dart:async';
 import 'package:masterloop_api/masterloop_api.dart' show DevicesApi;
 import 'package:masterloop_bloc/src/base.dart';
 import 'package:masterloop_bloc/src/bloc_list.dart';
-import 'package:masterloop_bloc/src/state.dart';
-import 'package:masterloop_core/masterloop_core.dart' show Device, Predicate;
+import 'package:masterloop_core/masterloop_core.dart' show Device;
 
-class DevicesBloc extends BaseBloc<DevicesEvent, Iterable<Device>>
-    with ListBloc {
+class DevicesBloc extends ListBloc<Device> {
   final DevicesApi api;
 
   DevicesBloc({
@@ -15,57 +13,22 @@ class DevicesBloc extends BaseBloc<DevicesEvent, Iterable<Device>>
   }) : assert(api != null);
 
   @override
-  Stream<BlocState<Iterable<Device>>> mapEventToState(
-      DevicesEvent event) async* {
-    switch (event.runtimeType) {
-      case RefreshDevicesEvent:
-        final refresh = event as RefreshDevicesEvent;
-        final completer = refresh.completer;
-        final tid = refresh.tid;
+  Future<Iterable<Device>> refresh([RefreshListEvent event]) {
+    final refresh = event as RefreshDevicesEvent;
+    final tid = refresh.tid;
 
-        if (tid == null) {
-          yield BlocState(
-            data: await api
-                .all()
-                .whenComplete(completer.complete)
-                .catchError(completer.completeError),
-          );
-        } else {
-          yield BlocState(
-            data: await api
-                .template(tid: tid)
-                .whenComplete(completer.complete)
-                .catchError(completer.completeError),
-          );
-        }
-        break;
-
-      case FilterDevicesEvent:
-      case SortDevicesEvent:
-        yield* super.mapEventToState(event);
-        break;
+    if (tid == null) {
+      return api.all();
+    } else {
+      return api.template(tid: tid);
     }
   }
 }
 
-abstract class DevicesEvent implements ListEvent {}
+abstract class DevicesEvent implements ListEvent<Device> {}
 
-class RefreshDevicesEvent implements DevicesEvent {
-  final Completer completer = Completer();
+class RefreshDevicesEvent with WithCompleter implements DevicesEvent {
   final String tid;
 
   RefreshDevicesEvent({this.tid});
-}
-
-class FilterDevicesEvent extends FilterListEvent<Device>
-    implements DevicesEvent {
-  FilterDevicesEvent({
-    Predicate<Device> tester,
-  }) : super(tester: tester);
-}
-
-class SortDevicesEvent extends SortListEvent<Device> implements DevicesEvent {
-  SortDevicesEvent({
-    Comparator<Device> comparator,
-  }) : super(comparator: comparator);
 }
