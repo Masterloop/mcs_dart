@@ -36,8 +36,7 @@ class DeviceHistoryApi implements Api {
           (response) => List<CommandValue>.unmodifiable(
                 response.data.map((v) => CommandValue.fromJson(v)),
               ),
-        )
-        .catchError((_) => null);
+        );
   }
 
   Future<Iterable<Value>> observation({
@@ -63,8 +62,7 @@ class DeviceHistoryApi implements Api {
           (response) => List<Value>.unmodifiable(
                 response.data.map((v) => Value.fromJson(v)),
               ),
-        )
-        .catchError((_) => null);
+        );
   }
 
   void _validateDuration(DateTime from, DateTime to) {

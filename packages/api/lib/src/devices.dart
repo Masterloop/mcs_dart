@@ -131,6 +131,5 @@ class DevicesApi implements Api {
             "/api/tools/liveconnect",
             data: List.unmodifiable(devices.map((f) => f.toRequest())),
           )
-          .then((response) => response.data as Map<String, dynamic>)
-          .catchError((_) => null);
+          .then((response) => response.data as Map<String, dynamic>);
 }

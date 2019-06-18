@@ -22,30 +22,24 @@ class DeviceApi implements Api {
 
   Future<Device> get details => _client
       .get("$basePath/details")
-      .then((response) => Device.fromJson(response.data))
-      .catchError((_) => null);
+      .then((response) => Device.fromJson(response.data));
 
   Future<Device> get secureDetails => _client
       .get("$basePath/securedetails")
-      .then((response) => Device.fromJson(response.data))
-      .catchError((_) => null);
+      .then((response) => Device.fromJson(response.data));
 
   Future<Template> get template => _client
       .get("$basePath/template")
-      .then((response) => Template.fromJson(response.data))
-      .catchError((_) => null);
+      .then((response) => Template.fromJson(response.data));
 
-  Future<Iterable<ObservationValue>> get current => _client
-      .get("$basePath/observations/current2")
-      .then(
-        (response) => List<ObservationValue>.unmodifiable(
-              response.data.map((v) => ObservationValue.fromJson(v)),
-            ),
-      )
-      .catchError((_) => null);
+  Future<Iterable<ObservationValue>> get current =>
+      _client.get("$basePath/observations/current2").then(
+            (response) => List<ObservationValue>.unmodifiable(
+                  response.data.map((v) => ObservationValue.fromJson(v)),
+                ),
+          );
 
-  DeviceHistoryApi _history;
-  DeviceHistoryApi get history => _history ??= DeviceHistoryApi(
+  DeviceHistoryApi get history => DeviceHistoryApi(
         client: _client,
         mid: mid,
       );
@@ -62,7 +56,9 @@ class DeviceApi implements Api {
         _client = client,
         _subscribe = subscribe,
         _unsubscribe = unsubscribe,
-        basePath = "${DevicesApi.basePath}/$mid";
+        basePath = "${DevicesApi.basePath}/$mid" {
+    print("test DeviceApi ${client.options.headers}");
+  }
 
   Future<bool> sendCommand({
     int id,
