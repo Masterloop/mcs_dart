@@ -57,6 +57,10 @@ abstract class ListBloc<S> extends Bloc<ListEvent<S>, BlocState<Iterable<S>>> {
             .whenComplete(completer.complete)
             .catchError(completer.completeError),
       );
+    } else if (event is ResetListEvent<S>) {
+      yield BlocState(
+        data: null,
+      );
     }
   }
 
@@ -64,6 +68,8 @@ abstract class ListBloc<S> extends Bloc<ListEvent<S>, BlocState<Iterable<S>>> {
 }
 
 abstract class ListEvent<S> {}
+
+class ResetListEvent<S> implements ListEvent<S> {}
 
 class RefreshListEvent<S> with WithCompleter implements ListEvent<S> {}
 
