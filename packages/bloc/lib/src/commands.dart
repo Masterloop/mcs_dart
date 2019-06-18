@@ -31,9 +31,7 @@ class CommandsBloc extends ListBloc<Command> {
             .catchError((_) => completer.complete(false));
         break;
 
-      case FilterListEvent:
-      case SortListEvent:
-      case RefreshListEvent:
+      default:
         yield* super.mapEventToState(event);
         break;
     }

@@ -14,13 +14,10 @@ class DevicesBloc extends ListBloc<Device> {
 
   @override
   Future<Iterable<Device>> refresh([RefreshListEvent event]) {
-    final refresh = event as RefreshDevicesEvent;
-    final tid = refresh.tid;
-
-    if (tid == null) {
-      return api.all();
+    if (event is RefreshDevicesEvent) {
+      return api.template(tid: (event as RefreshDevicesEvent).tid);
     } else {
-      return api.template(tid: tid);
+      return api.all();
     }
   }
 }
@@ -30,5 +27,5 @@ abstract class DevicesEvent implements ListEvent<Device> {}
 class RefreshDevicesEvent with WithCompleter implements DevicesEvent {
   final String tid;
 
-  RefreshDevicesEvent({this.tid});
+  RefreshDevicesEvent({this.tid}) : assert(tid != null);
 }

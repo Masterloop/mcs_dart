@@ -34,36 +34,29 @@ abstract class ListBloc<S> extends Bloc<ListEvent<S>, BlocState<Iterable<S>>> {
 
   @override
   Stream<BlocState<Iterable<S>>> mapEventToState(event) async* {
-    switch (event.runtimeType) {
-      case SortListEvent:
-        _comparator = (event as SortListEvent<S>).comparator;
+    if (event is SortListEvent<S>) {
+      _comparator = event.comparator;
 
-        yield BlocState(
-          data: List<S>.unmodifiable(
-            currentState.data,
-          ),
-        );
-        break;
+      yield BlocState(
+        data: List<S>.unmodifiable(
+          currentState.data,
+        ),
+      );
+    } else if (event is FilterListEvent<S>) {
+      _tester = event.tester;
 
-      case FilterListEvent:
-        _tester = (event as FilterListEvent<S>).tester;
-
-        yield BlocState(
-          data: List<S>.unmodifiable(
-            currentState.data,
-          ),
-        );
-        break;
-
-      case RefreshListEvent:
-        final refreshEvent = event as RefreshListEvent;
-        final completer = refreshEvent.completer;
-        yield BlocState(
-          data: await refresh(refreshEvent)
-              .whenComplete(completer.complete)
-              .catchError(completer.completeError),
-        );
-        break;
+      yield BlocState(
+        data: List<S>.unmodifiable(
+          currentState.data,
+        ),
+      );
+    } else if (event is RefreshListEvent<S>) {
+      final completer = event.completer;
+      yield BlocState(
+        data: await refresh(event)
+            .whenComplete(completer.complete)
+            .catchError(completer.completeError),
+      );
     }
   }
 

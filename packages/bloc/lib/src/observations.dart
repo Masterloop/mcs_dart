@@ -78,9 +78,7 @@ class ObservationsBloc extends ListBloc<ObservationWithValue> {
         );
         break;
 
-      case FilterListEvent:
-      case SortListEvent:
-      case RefreshListEvent:
+      default:
         yield* super.mapEventToState(event);
         break;
     }
