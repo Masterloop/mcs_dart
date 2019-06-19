@@ -30,7 +30,7 @@ class LiveDevice implements Matcher {
     _liveController.close();
   }
 
-  void onMessage({Map<String, dynamic> headers, Map<String, dynamic> value}) {
+  void onMessage(Map<String, String> headers, Map<String, dynamic> value) {
     assert(headers != null);
     assert(value != null);
 

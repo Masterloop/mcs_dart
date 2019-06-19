@@ -25,7 +25,7 @@ class RabbitMQConnection {
     );
   }
 
-  Future<void> dispose() =>
+  Future<void> disconnect() =>
       (stompClient.isDisconnected ? Future.value() : stompClient.disconnect());
 
   static Future<WebSocket> _connectToWebSocket() =>
