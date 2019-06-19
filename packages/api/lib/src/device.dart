@@ -63,21 +63,18 @@ class DeviceApi implements Api {
     Iterable<Map<String, dynamic>> arguments,
     Duration expiresIn,
   }) =>
-      _client
-          .post(
-            "$basePath/commands/$id",
-            data: {
-              "Id": id,
-              "Arguments": arguments,
-              "Timestamp": DateTime.now().toUtc().toIso8601String(),
-              "ExpiresAt": DateTime.now()
-                  .add(expiresIn ?? const Duration(minutes: 5))
-                  .toUtc()
-                  .toIso8601String(),
-            },
-          )
-          .then((_) => true)
-          .catchError((_) => false);
+      _client.post(
+        "$basePath/commands/$id",
+        data: {
+          "Id": id,
+          "Arguments": arguments,
+          "Timestamp": DateTime.now().toUtc().toIso8601String(),
+          "ExpiresAt": DateTime.now()
+              .add(expiresIn ?? const Duration(minutes: 5))
+              .toUtc()
+              .toIso8601String(),
+        },
+      ).then((_) => true);
 
   Future<Stream<LiveValue>> subscribe({
     Iterable<int> observations,
