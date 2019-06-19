@@ -56,9 +56,7 @@ class DeviceApi implements Api {
         _client = client,
         _subscribe = subscribe,
         _unsubscribe = unsubscribe,
-        basePath = "${DevicesApi.basePath}/$mid" {
-    print("test DeviceApi ${client.options.headers}");
-  }
+        basePath = "${DevicesApi.basePath}/$mid";
 
   Future<bool> sendCommand({
     int id,
