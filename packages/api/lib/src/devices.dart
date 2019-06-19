@@ -79,12 +79,12 @@ class DevicesApi implements Api {
       return _subscribe(devices: _liveDevicesMap.values.toList())
           .then((_) => liveDevice?.dispose());
     } else {
-      return Future.value();
+      return _unsubscribe();
     }
   }
 
   Future<void> _unsubscribe() =>
-      (_rabbitMQ?.dispose() ?? Future.value()).then((_) => _rabbitMQ = null);
+      (_rabbitMQ?.disconnect() ?? Future.value()).then((_) => _rabbitMQ = null);
 
   Future<void> _subscribe({Iterable<LiveDevice> devices}) {
     assert(devices != null, devices.isNotEmpty);
@@ -95,33 +95,20 @@ class DevicesApi implements Api {
                   (rabbitMQ) {
                     _rabbitMQ = rabbitMQ;
                     final queue = data["QueueName"];
-                    devices.forEach((liveDevice) {
-                      rabbitMQ.stompClient.subscribeJson(
-                        liveDevice.id,
-                        "/amq/queue/$queue",
-                        (headers, value) => _onMessage(
-                              mid: liveDevice.mid,
-                              headers: headers,
-                              value: value,
-                            ),
-                        matcher: liveDevice,
-                      );
-                    });
+                    devices.forEach(
+                      (liveDevice) => rabbitMQ.stompClient.subscribeJson(
+                            liveDevice.id,
+                            "/amq/queue/$queue",
+                            (headers, value) =>
+                                liveDevice.onMessage(headers, value),
+                            matcher: liveDevice,
+                          ),
+                    );
                   },
                 ),
           ),
     );
   }
-
-  void _onMessage({
-    String mid,
-    Map<String, String> headers,
-    Map<String, dynamic> value,
-  }) =>
-      _liveDevicesMap[mid]?.onMessage(
-        headers: headers,
-        value: value,
-      );
 
   Future<Map<String, dynamic>> _getConnectionData({
     Iterable<LiveDevice> devices = const [],
