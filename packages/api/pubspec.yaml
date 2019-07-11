@@ -9,6 +9,6 @@ environment:
 
 dependencies:
   stomp: ^0.8.0
-  dio: ^2.1.7
+  dio: ^2.1.13
   masterloop_core:
     path: ../core
