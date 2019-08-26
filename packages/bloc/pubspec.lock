@@ -7,7 +7,7 @@ packages:
       name: bloc
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.14.4"
+    version: "0.15.0"
   cookie_jar:
     dependency: transitive
     description:
@@ -21,7 +21,7 @@ packages:
       name: dio
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.13"
+    version: "2.1.16"
   masterloop_api:
     dependency: "direct main"
     description:
