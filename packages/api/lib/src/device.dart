@@ -35,8 +35,8 @@ class DeviceApi implements Api {
   Future<Iterable<ObservationValue>> get current =>
       _client.get("$basePath/observations/current2").then(
             (response) => List<ObservationValue>.unmodifiable(
-                  response.data.map((v) => ObservationValue.fromJson(v)),
-                ),
+              response.data.map((v) => ObservationValue.fromJson(v)),
+            ),
           );
 
   DeviceHistoryApi get history => DeviceHistoryApi(

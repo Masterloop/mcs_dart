@@ -71,7 +71,9 @@ abstract class ListEvent<S> {}
 
 class ResetListEvent<S> implements ListEvent<S> {}
 
-class RefreshListEvent<S> with WithCompleter implements ListEvent<S> {}
+class RefreshListEvent<S> with WithCompleter implements ListEvent<S> {
+  final Completer completer = Completer();
+}
 
 class SortListEvent<S> implements ListEvent<S> {
   final Comparator<S> comparator;

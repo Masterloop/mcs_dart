@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:masterloop_api/src/templates.dart';
 import 'package:masterloop_api/src/devices.dart';
@@ -46,7 +45,7 @@ class MasterloopApi implements Api {
   Future<void> connect({String username, String password}) => _client.post(
         "/token",
         options: Options(
-          contentType: ContentType.parse("application/x-www-form-urlencoded"),
+          contentType: Headers.formUrlEncodedContentType,
         ),
         data: <String, String>{
           "grant_type": "password",
